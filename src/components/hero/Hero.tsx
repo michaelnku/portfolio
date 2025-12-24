@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -43,13 +44,17 @@ const Hero = () => {
 
           {/* CTA */}
           <div className="flex flex-wrap gap-4 pt-4">
-            <Button size="lg" className="px-8">
-              View Projects
-            </Button>
+            <Link href={"#projects"}>
+              <Button size="lg" className="px-8">
+                View Projects
+              </Button>
+            </Link>
 
-            <Button size="lg" variant="outline" className="px-8">
-              Contact Me
-            </Button>
+            <Link href={"#contact"}>
+              <Button size="lg" variant="outline" className="px-8">
+                Contact Me
+              </Button>
+            </Link>
           </div>
 
           {/* TRUST SIGNAL */}

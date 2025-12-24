@@ -16,7 +16,7 @@ const projects = [
       "Tailwind CSS",
     ],
     features: [
-      "Role-based access (Moderator, Admin, Seller,Rider, Buyer)",
+      "Role-based access (Moderator, Admin, Seller, Rider, Buyer)",
       "Product & inventory management",
       "Secure authentication & authorization",
       "Stripe payment integration",

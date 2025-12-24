@@ -73,11 +73,15 @@ export default function AboutPage() {
 
           <p>
             One of my flagship projects is{" "}
-            <Link href={"nexamart-store-red.vercel.app"}>
+            <a
+              href={"nexamart-store-red.vercel.app"}
+              target="_blank"
+              rel="noreferrer"
+            >
               <span className="font-medium text-foreground">
                 NexaMart Marketplace
               </span>
-            </Link>
+            </a>
             , a full-stack platform featuring authentication, role-based access,
             dashboards, and payment processing.
           </p>

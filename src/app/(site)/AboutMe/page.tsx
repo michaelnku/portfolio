@@ -36,7 +36,7 @@ const timeline = [
 
 export default function AboutPage() {
   return (
-    <section className="mx-auto max-w-5xl px-6 py-20 space-y-20">
+    <section className="mx-auto max-w-5xl px-6 space-y-20">
       {/* HEADER */}
       <header className="space-y-4">
         <h1 className="text-2xl md:text-4xl font-bold">About Me</h1>

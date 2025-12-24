@@ -4,7 +4,7 @@ import ResumeButton from "@/components/home/ResumeButton";
 
 const ContactPage = () => {
   return (
-    <section className="mx-auto max-w-4xl px-6 py-20 space-y-16">
+    <section className="mx-auto max-w-4xl px-6  space-y-16">
       {/* HEADER */}
       <header className="space-y-4">
         <h1 className="text-3xl md:text-4xl font-bold">Get in Touch</h1>
@@ -45,10 +45,10 @@ const ContactPage = () => {
             <div>
               <p className="text-sm">Email</p>
               <a
-                href="mailto:your@email.com"
+                href="mailto: nkumichael1@gmail.com"
                 className="font-medium text-foreground hover:underline"
               >
-                your@email.com
+                nkumichael1@gmail.com
               </a>
             </div>
 
@@ -67,19 +67,20 @@ const ContactPage = () => {
             <div>
               <p className="text-sm">GitHub</p>
               <a
-                href="https://github.com/yourusername"
+                href="https://github.com/michaelnku
+"
                 target="_blank"
                 rel="noreferrer"
                 className="font-medium text-foreground hover:underline"
               >
-                github.com/yourusername
+                github.com/michaelnku
               </a>
             </div>
 
             <div>
               <p className="text-sm">Location</p>
               <p className="font-medium text-foreground">
-                Nigeria · Open to Remote & International Roles
+                📍 Nigeria · Open to Remote & International Roles
               </p>
             </div>
           </div>

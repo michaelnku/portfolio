@@ -26,8 +26,10 @@ model User {
 
   role UserRole @default(USER)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  portfolios Portfolio[]
+  projects   Project[]
 }
 
 enum UserRole {
@@ -72,4 +74,61 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model Portfolio {
+  id          String  @id @default(cuid())
+  title       String
+  description String?
+  published   Boolean @default(false)
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  techStack   String[]
+  liveUrl     String?
+  repoUrl     String?
+  featured    Boolean  @default(false)
+  published   Boolean  @default(false)
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PortfolioAnalytics {
+  id              String   @id @default(cuid())
+  date            DateTime @unique
+  totalVisitors   Int      @default(0)
+  resumeDownloads Int      @default(0)
+  contactSubmits  Int      @default(0)
+}
+
+model ContactMessage {
+  id      String  @id @default(cuid())
+  name    String
+  email   String
+  subject String?
+  message String
+
+  source ContactSource @default(PORTFOLIO)
+
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}
+
+enum ContactSource {
+  PORTFOLIO
+  EMAIL
+  LINKEDIN
 }

@@ -16,7 +16,7 @@ export default async function SiteLayout({
       {/* NAVBAR */}
       {(!user || user.role === "USER") && <SiteNavbar />}
 
-      {user?.role === "ADMIN" && <AdminNavbar />}
+      {user?.role === "ADMIN" && <AdminNavbar initialUser={user} />}
 
       {/* PAGE CONTENT */}
       <main className="flex-1 pt-16">{children}</main>

@@ -16,8 +16,7 @@ export default async function DashboardLayout({
   return (
     <div>
       {/* TOP NAVBAR */}
-      <AdminNavbar />
-      {/* <AdminNavbar initialUser={user} /> */}
+      <AdminNavbar initialUser={user} />
 
       <div className="flex max-w-full overflow-x-hidden">
         {/* LEFT SIDEBAR */}

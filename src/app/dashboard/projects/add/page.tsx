@@ -1,7 +1,9 @@
-import React from "react";
+import CreateProjectForm from "../../_component/CreateProjectForm";
 
-const page = () => {
-  return <div>page</div>;
-};
-
-export default page;
+export default function ProjectsPage() {
+  return (
+    <div>
+      <CreateProjectForm />
+    </div>
+  );
+}

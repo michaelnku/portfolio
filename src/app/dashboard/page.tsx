@@ -7,13 +7,13 @@ import { FolderKanban, Mail, BarChart3, FileText } from "lucide-react";
 const stats = [
   {
     label: "Projects",
-    value: "—",
+    value: 0,
     icon: FolderKanban,
     href: "/dashboard/projects",
   },
   {
     label: "Messages",
-    value: "—",
+    value: 0,
     icon: Mail,
     href: "/dashboard/messages",
   },
@@ -25,7 +25,7 @@ const stats = [
   },
   {
     label: "Resume Downloads",
-    value: "—",
+    value: 0,
     icon: FileText,
     href: "/dashboard/analytics",
   },
@@ -33,7 +33,7 @@ const stats = [
 
 export default function DashboardPage() {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-6 space-y-10">
+    <div className="mx-auto max-w-6xl px-6 space-y-10">
       {/* HEADER */}
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold">Dashboard</h1>

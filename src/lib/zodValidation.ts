@@ -86,3 +86,20 @@ export const updateUserSchema = z
   );
 
 export type updateUserSchemaType = z.infer<typeof updateUserSchema>;
+
+//create projects
+export const createProjectSchema = z.object({
+  name: z.string().min(3, "Project name is too short"),
+  role: z.string(),
+  summary: z.string().min(10, "Summary is too short"),
+  description: z.string().min(10, "Description is too short").optional(),
+  techStack: z.array(z.string().min(1)).min(1, "Add at least one technology"),
+  keyFeatures: z.array(z.string().min(1)).min(1, "Add at least one feature"),
+  liveUrl: z.string().url().optional().or(z.literal("")),
+  repoUrl: z.string().url().optional().or(z.literal("")),
+  isFlagship: z.boolean(),
+  featured: z.boolean(),
+  published: z.boolean(),
+});
+
+export type createProjectSchemaType = z.infer<typeof createProjectSchema>;

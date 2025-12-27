@@ -19,3 +19,22 @@ export type SessionUser = {
   image?: string | null;
   role?: string | null;
 };
+
+export type ProjectDB = {
+  id: string;
+  name: string;
+  role: string;
+  summary: string;
+
+  keyFeatures: string[];
+  techStack: string[];
+
+  isFlagship: boolean;
+  featured: boolean;
+  published: boolean;
+
+  liveUrl?: string | null;
+  repoUrl?: string | null;
+};
+
+export type ProjectUI = ProjectDB;

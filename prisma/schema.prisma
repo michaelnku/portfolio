@@ -90,14 +90,21 @@ model Portfolio {
 }
 
 model Project {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
-  description String
+  role        String
+  summary     String
+  description String?
+
+  liveUrl String?
+  repoUrl String?
+
+  isFlagship Boolean @default(false)
+  featured   Boolean @default(false)
+  published  Boolean @default(false)
+
+  keyFeatures String[]
   techStack   String[]
-  liveUrl     String?
-  repoUrl     String?
-  featured    Boolean  @default(false)
-  published   Boolean  @default(false)
 
   createdById String
   createdBy   User   @relation(fields: [createdById], references: [id])

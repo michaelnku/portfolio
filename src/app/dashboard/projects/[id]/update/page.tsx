@@ -1,6 +1,7 @@
 import ProjectForm from "@/app/dashboard/_component/ProjectForm";
+import { getProjectForEdit } from "@/components/helper/data";
 import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -9,11 +10,9 @@ interface Props {
 export default async function EditProjectPage({ params }: Props) {
   const projectId = (await params).id;
 
-  const project = await prisma.project.findUnique({
-    where: { id: projectId },
-  });
+  const project = await getProjectForEdit(projectId);
 
-  if (!project) return notFound();
+  if (!project) redirect("/dashboard/projects");
 
   return (
     <div className="space-y-6">

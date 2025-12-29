@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getPublicProjects } from "@/helper/getPublicProjects";
+import { getPublicProjects } from "@/components/helper/getPublicProjects";
 
 const ProjectsSection = async () => {
   const projects = await getPublicProjects();

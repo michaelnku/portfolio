@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { ProjectDB } from "@/lib/types";
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -22,3 +23,25 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
+
+export async function getProjectForEdit(id: string): Promise<ProjectDB | null> {
+  const project = await prisma.project.findUnique({ where: { id } });
+
+  if (!project) return null;
+
+  return {
+    id: project.id,
+    name: project.name,
+    role: project.role,
+    summary: project.summary,
+    description: project.description,
+    keyFeatures: project.keyFeatures ?? [],
+    techStack: (project.techStack ?? []) as { key: string; value: string }[],
+    isFlagship: project.isFlagship,
+    featured: project.featured,
+    published: project.published,
+    liveUrl: project.liveUrl,
+    repoUrl: project.repoUrl,
+    createdAt: project.createdAt,
+  };
+}

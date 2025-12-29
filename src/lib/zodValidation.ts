@@ -87,11 +87,7 @@ export const updateUserSchema = z
 
 export type updateUserSchemaType = z.infer<typeof updateUserSchema>;
 
-export const techStackSchema = z.object({
-  key: z.string().min(1),
-  value: z.string().min(1),
-});
-export const keyFeaturesSchema = z.object({
+export const techStackInputSchema = z.object({
   key: z.string().min(1),
   value: z.string().min(1),
 });
@@ -101,9 +97,12 @@ export const createProjectSchema = z.object({
   name: z.string().min(3),
   role: z.string(),
   summary: z.string().min(10),
-  description: z.string().min(10).optional().or(z.literal("")),
-  techStack: z.array(techStackSchema),
-  keyFeatures: z.array(keyFeaturesSchema),
+  description: z.string().optional(),
+
+  techStack: z.array(techStackInputSchema).min(1),
+
+  keyFeatures: z.string().min(1),
+
   liveUrl: z.string().url().optional().or(z.literal("")),
   repoUrl: z.string().url().optional().or(z.literal("")),
   isFlagship: z.boolean(),

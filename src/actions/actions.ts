@@ -12,25 +12,47 @@ import {
 
 export async function createProject(values: createProjectSchemaType) {
   const user = await CurrentUser();
-
-  if (!user || user.role !== "ADMIN") {
-    return { error: "Unauthorized" };
-  }
+  if (!user || user.role !== "ADMIN") return { error: "Unauthorized" };
 
   const parsed = createProjectSchema.safeParse(values);
-  if (!parsed.success) {
-    return { error: "Invalid project data" };
-  }
+  if (!parsed.success) return { error: "Invalid project data" };
+
+  const {
+    name,
+    role,
+    summary,
+    description,
+    liveUrl,
+    repoUrl,
+    isFlagship,
+    featured,
+    published,
+  } = parsed.data;
+
+  const keyFeaturesArray =
+    values.keyFeatures
+      ?.split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean) ?? [];
 
   await prisma.project.create({
     data: {
-      ...parsed.data,
+      name,
+      role,
+      summary,
+      description,
+      liveUrl,
+      repoUrl,
+      isFlagship,
+      featured,
+      published,
+      keyFeatures: keyFeaturesArray,
+      techStack: values.techStack ?? [],
       createdById: user.id,
     },
   });
 
   revalidatePath("/dashboard/projects");
-
   return { success: true };
 }
 
@@ -49,9 +71,40 @@ export async function updateProject(
     return { error: "Invalid project data" };
   }
 
+  const {
+    name,
+    role,
+    summary,
+    description,
+    liveUrl,
+    repoUrl,
+    isFlagship,
+    featured,
+    published,
+  } = parsed.data;
+
+  const keyFeaturesArray =
+    values.keyFeatures
+      ?.split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean) ?? [];
+
   await prisma.project.update({
     where: { id: projectId },
-    data: parsed.data,
+    data: {
+      name,
+      role,
+      summary,
+      description,
+      liveUrl,
+      repoUrl,
+      isFlagship,
+      featured,
+      published,
+      keyFeatures: keyFeaturesArray,
+      techStack: values.techStack ?? [],
+      createdById: user.id,
+    },
   });
 
   revalidatePath("/dashboard/projects");

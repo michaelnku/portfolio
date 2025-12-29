@@ -16,6 +16,7 @@ export async function getPublicProjects(): Promise<ProjectUI[]> {
       name: true,
       role: true,
       summary: true,
+      description: true,
       keyFeatures: true,
       techStack: true,
       isFlagship: true,
@@ -23,8 +24,12 @@ export async function getPublicProjects(): Promise<ProjectUI[]> {
       published: true,
       liveUrl: true,
       repoUrl: true,
+      createdAt: true,
     },
   });
 
-  return projects;
+  return projects.map((p) => ({
+    ...p,
+    techStack: (p.techStack ?? []) as { key: string; value: string }[],
+  }));
 }

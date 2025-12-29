@@ -26,15 +26,17 @@ export type ProjectDB = {
   role: string;
   summary: string;
 
+  description: string | null;
   keyFeatures: string[];
-  techStack: string[];
+  techStack: { key: string; value: string }[];
 
   isFlagship: boolean;
   featured: boolean;
   published: boolean;
 
-  liveUrl?: string | null;
-  repoUrl?: string | null;
+  liveUrl: string | null;
+  repoUrl: string | null;
+  createdAt: Date;
 };
 
 export type ProjectUI = ProjectDB;

@@ -36,8 +36,10 @@ export default function CreateProjectForm() {
       name: "",
       role: "Full-Stack Developer",
       summary: "",
+
       techStack: [],
-      keyFeatures: [],
+      keyFeatures: "",
+
       liveUrl: "",
       repoUrl: "",
       isFlagship: false,
@@ -55,16 +57,7 @@ export default function CreateProjectForm() {
     name: "techStack",
   });
 
-  const {
-    fields: featureFields,
-    append: addFeature,
-    remove: removeFeature,
-  } = useFieldArray({
-    control: form.control,
-    name: "keyFeatures",
-  });
-
-  function onSubmit(values: createProjectSchemaType) {
+  const onSubmit = (values: createProjectSchemaType) => {
     startTransition(async () => {
       const res = await createProject(values);
 
@@ -76,7 +69,7 @@ export default function CreateProjectForm() {
       toast.success("Project created successfully");
       router.push("/dashboard/projects");
     });
-  }
+  };
 
   return (
     <Form {...form}>
@@ -129,37 +122,26 @@ export default function CreateProjectForm() {
           )}
         />
 
-        <FormItem>
-          <FormLabel>Key Features</FormLabel>
-
-          <div className="space-y-3">
-            {featureFields.map((field, index) => (
-              <div key={field.id} className="flex gap-2">
-                <Input
-                  {...form.register(`keyFeatures.${index}`)}
-                  placeholder="e.g. Role-based access control"
+        <FormField
+          control={form.control}
+          name="keyFeatures"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Key Features (one per line)</FormLabel>
+              <FormControl>
+                <Textarea
+                  rows={4}
+                  placeholder={`Modern dashboard UI
+Role-based access
+Permission-based access
+`}
+                  {...field}
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => removeFeature(index)}
-                >
-                  <Minus className="mr-2 h-4 w-4" /> Remove
-                </Button>
-              </div>
-            ))}
-
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => addFeature({ key: "", value: "" })}
-            >
-              <Plus className="mr-2 h-4 w-4" /> Add Feature
-            </Button>
-          </div>
-
-          <FormMessage />
-        </FormItem>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* TECH STACK */}
         <FormItem>
@@ -169,8 +151,12 @@ export default function CreateProjectForm() {
             {techFields.map((field, index) => (
               <div key={field.id} className="flex gap-2">
                 <Input
-                  {...form.register(`techStack.${index}`)}
-                  placeholder="e.g. Next.js"
+                  {...form.register(`techStack.${index}.key`)}
+                  placeholder="Key e.g. frontend"
+                />
+                <Input
+                  {...form.register(`techStack.${index}.value`)}
+                  placeholder="Value e.g. Next.js"
                 />
                 <Button
                   type="button"

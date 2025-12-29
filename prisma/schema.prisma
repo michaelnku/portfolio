@@ -103,8 +103,8 @@ model Project {
   featured   Boolean @default(false)
   published  Boolean @default(false)
 
-  keyFeatures String[]
-  techStack   String[]
+  keyFeatures String[] @default([])
+  techStack   Json     @default("[]")
 
   createdById String
   createdBy   User   @relation(fields: [createdById], references: [id])

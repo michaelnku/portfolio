@@ -32,10 +32,6 @@ export default function ProjectsTable({ projects }: Props) {
                 <div className="text-xs text-muted-foreground">
                   {project.role} · {project.summary.slice(0, 60)}…
                 </div>
-
-                <div className="text-xs text-muted-foreground">
-                  {project.summary.slice(0, 60)}…
-                </div>
               </td>
 
               <td className="px-4 py-3 space-x-2">
@@ -56,12 +52,13 @@ export default function ProjectsTable({ projects }: Props) {
               <td className="px-4 py-3">
                 <div className="flex flex-wrap gap-1">
                   {project.techStack.slice(0, 3).map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded bg-muted px-2 py-0.5 text-xs"
+                    <Badge
+                      key={tech.key}
+                      variant="secondary"
+                      className="rounded-sm text-xs font-medium px-2 py-0.5"
                     >
-                      {tech}
-                    </span>
+                      {tech.value}
+                    </Badge>
                   ))}
                 </div>
               </td>

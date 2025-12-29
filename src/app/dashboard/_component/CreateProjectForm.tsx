@@ -152,11 +152,11 @@ Permission-based access
               <div key={field.id} className="flex gap-2">
                 <Input
                   {...form.register(`techStack.${index}.key`)}
-                  placeholder="Key e.g. frontend"
+                  placeholder="e.g. frontend"
                 />
                 <Input
                   {...form.register(`techStack.${index}.value`)}
-                  placeholder="Value e.g. Next.js"
+                  placeholder="e.g. Next.js"
                 />
                 <Button
                   type="button"

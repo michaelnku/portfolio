@@ -32,17 +32,27 @@ export default function ProjectsCards({ projects }: Props) {
           <p className="text-sm text-muted-foreground">{project.summary}</p>
 
           <ul className="text-xs text-muted-foreground list-disc pl-4">
-            {project.keyFeatures.slice(0, 2).map((f) => (
-              <li key={f}>{f}</li>
+            {project.keyFeatures.slice(0, 2).map((f, index) => (
+              <li key={`${project.id}-${index}`}> {f}</li>
             ))}
           </ul>
 
-          <div className="flex flex-wrap gap-1">
-            {project.techStack.map((tech) => (
-              <span key={tech} className="rounded bg-muted px-2 py-0.5 text-xs">
-                {tech}
-              </span>
+          <div className="flex flex-wrap gap-1 mt-2">
+            {project.techStack.slice(0, 4).map((tech) => (
+              <Badge
+                key={tech.key}
+                variant="secondary"
+                className="rounded-sm text-xs font-medium px-2 py-0.5"
+              >
+                {tech.value}
+              </Badge>
             ))}
+
+            {project.techStack.length > 4 && (
+              <span className="text-xs text-muted-foreground ml-1">
+                +{project.techStack.length - 4} more
+              </span>
+            )}
           </div>
 
           <div className="flex items-center justify-between pt-2">

@@ -126,8 +126,8 @@ const ProjectsSection = async () => {
           <div className="space-y-3">
             <h3 className="font-medium">Key Features</h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-muted-foreground text-sm">
-              {project.keyFeatures.map((feature) => (
-                <li key={feature}>• {feature}</li>
+              {project.keyFeatures.map((f, index) => (
+                <li key={`${project.id}-${index}`}>• {f}</li>
               ))}
             </ul>
           </div>
@@ -138,8 +138,8 @@ const ProjectsSection = async () => {
 
             <ul className="flex flex-wrap gap-2 text-sm text-muted-foreground">
               {project.techStack.map((tech) => (
-                <li key={tech} className="rounded-full border px-4 py-1">
-                  {tech}
+                <li key={tech.key} className="rounded-full border px-4 py-1">
+                  {tech.value}
                 </li>
               ))}
             </ul>

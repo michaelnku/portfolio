@@ -149,15 +149,32 @@ Permission-based access
 
           <div className="space-y-3">
             {techFields.map((field, index) => (
-              <div key={field.id} className="flex gap-2">
-                <Input
-                  {...form.register(`techStack.${index}.key`)}
-                  placeholder="e.g. frontend"
+              <div
+                key={field.id}
+                className="grid grid-cols-2 gap-4 items-center"
+              >
+                <FormField
+                  control={form.control}
+                  name={`techStack.${index}.key`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">Label</FormLabel>
+                      <Input {...field} placeholder="e.g. frontend" />
+                    </FormItem>
+                  )}
                 />
-                <Input
-                  {...form.register(`techStack.${index}.value`)}
-                  placeholder="e.g. Next.js"
+
+                <FormField
+                  control={form.control}
+                  name={`techStack.${index}.value`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">Value</FormLabel>
+                      <Input {...field} placeholder="e.g. Next.js" />
+                    </FormItem>
+                  )}
                 />
+
                 <Button
                   type="button"
                   variant="outline"

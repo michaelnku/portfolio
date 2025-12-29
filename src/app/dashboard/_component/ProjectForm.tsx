@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Minus, Plus } from "lucide-react";
 
 type ProjectFormProps = {
   project: ProjectUI;
@@ -52,6 +53,15 @@ export default function ProjectForm({ project }: ProjectFormProps) {
       featured: project.featured,
       published: project.published,
     },
+  });
+
+  const {
+    fields: techFields,
+    append: addTech,
+    remove: removeTech,
+  } = useFieldArray({
+    control: form.control,
+    name: "techStack",
   });
 
   function onSubmit(values: UpdateProjectSchemaType) {
@@ -142,29 +152,58 @@ Permission-based access
         />
 
         {/* TECH STACK */}
-        <FormField
-          control={form.control}
-          name="techStack"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tech Stack (comma separated)</FormLabel>
-              <FormControl>
-                <Input
-                  value={field.value.join(", ")}
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value
-                        .split(",")
-                        .map((t) => t.trim())
-                        .filter(Boolean)
-                    )
-                  }
+        <FormItem>
+          <FormLabel>Tech Stack</FormLabel>
+
+          <div className="space-y-3">
+            {techFields.map((field, index) => (
+              <div
+                key={field.id}
+                className="grid grid-cols-2 gap-4 items-center"
+              >
+                <FormField
+                  control={form.control}
+                  name={`techStack.${index}.key`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">Label</FormLabel>
+                      <Input {...field} placeholder="e.g. frontend" />
+                    </FormItem>
+                  )}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
+                <FormField
+                  control={form.control}
+                  name={`techStack.${index}.value`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">Value</FormLabel>
+                      <Input {...field} placeholder="e.g. Next.js" />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => removeTech(index)}
+                >
+                  <Minus className="mr-2 h-4 w-4" /> Remove
+                </Button>
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => addTech({ key: "", value: "" })}
+            >
+              <Plus className="mr-2 h-4 w-4" /> Add technology
+            </Button>
+          </div>
+
+          <FormMessage />
+        </FormItem>
 
         {/* LIVE URL */}
         <FormField

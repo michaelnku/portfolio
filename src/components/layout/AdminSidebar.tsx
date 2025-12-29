@@ -35,7 +35,11 @@ export default function AdminSidebar() {
     <aside className="hidden md:flex h-[calc(100vh-64px)] w-64 flex-col border-r bg-background px-4 py-6">
       <nav className="flex flex-col gap-2">
         {sidebarLinks.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+          const isActive =
+            item.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname.startsWith(item.href);
+
           const Icon = item.icon;
 
           return (

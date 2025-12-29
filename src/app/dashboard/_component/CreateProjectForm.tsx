@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Minus, Plus } from "lucide-react";
 
 export default function CreateProjectForm() {
   const router = useRouter();
@@ -43,6 +44,24 @@ export default function CreateProjectForm() {
       featured: false,
       published: false,
     },
+  });
+
+  const {
+    fields: techFields,
+    append: addTech,
+    remove: removeTech,
+  } = useFieldArray({
+    control: form.control,
+    name: "techStack",
+  });
+
+  const {
+    fields: featureFields,
+    append: addFeature,
+    remove: removeFeature,
+  } = useFieldArray({
+    control: form.control,
+    name: "keyFeatures",
   });
 
   function onSubmit(values: createProjectSchemaType) {
@@ -110,57 +129,70 @@ export default function CreateProjectForm() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="keyFeatures"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Key Features (one per line)</FormLabel>
-              <FormControl>
-                <Textarea
-                  rows={4}
-                  placeholder={`Role-based access\nStripe payments\nAdmin dashboard`}
-                  value={field.value.join("\n")}
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value
-                        .split("\n")
-                        .map((f) => f.trim())
-                        .filter(Boolean)
-                    )
-                  }
+        <FormItem>
+          <FormLabel>Key Features</FormLabel>
+
+          <div className="space-y-3">
+            {featureFields.map((field, index) => (
+              <div key={field.id} className="flex gap-2">
+                <Input
+                  {...form.register(`keyFeatures.${index}`)}
+                  placeholder="e.g. Role-based access control"
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => removeFeature(index)}
+                >
+                  <Minus className="mr-2 h-4 w-4" /> Remove
+                </Button>
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => addFeature({ key: "", value: "" })}
+            >
+              <Plus className="mr-2 h-4 w-4" /> Add Feature
+            </Button>
+          </div>
+
+          <FormMessage />
+        </FormItem>
 
         {/* TECH STACK */}
-        <FormField
-          control={form.control}
-          name="techStack"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tech Stack</FormLabel>
-              <FormControl>
+        <FormItem>
+          <FormLabel>Tech Stack</FormLabel>
+
+          <div className="space-y-3">
+            {techFields.map((field, index) => (
+              <div key={field.id} className="flex gap-2">
                 <Input
-                  placeholder="Next.js, TypeScript, Prisma"
-                  value={field.value.join(", ")}
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value
-                        .split(",")
-                        .map((t) => t.trim())
-                        .filter(Boolean)
-                    )
-                  }
+                  {...form.register(`techStack.${index}`)}
+                  placeholder="e.g. Next.js"
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => removeTech(index)}
+                >
+                  <Minus className="mr-2 h-4 w-4" /> Remove
+                </Button>
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => addTech({ key: "", value: "" })}
+            >
+              <Plus className="mr-2 h-4 w-4" /> Add technology
+            </Button>
+          </div>
+
+          <FormMessage />
+        </FormItem>
 
         {/* LIVE URL */}
         <FormField

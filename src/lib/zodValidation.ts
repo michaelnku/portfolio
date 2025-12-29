@@ -87,18 +87,23 @@ export const updateUserSchema = z
 
 export type updateUserSchemaType = z.infer<typeof updateUserSchema>;
 
+export const techStackSchema = z.object({
+  key: z.string().min(1),
+  value: z.string().min(1),
+});
+export const keyFeaturesSchema = z.object({
+  key: z.string().min(1),
+  value: z.string().min(1),
+});
+
 //create projects
 export const createProjectSchema = z.object({
-  name: z.string().min(3, "Project name is too short"),
+  name: z.string().min(3),
   role: z.string(),
-  summary: z.string().min(10, "Summary is too short"),
-  description: z
-    .string()
-    .min(10, "Description is too short")
-    .optional()
-    .or(z.literal("")),
-  techStack: z.array(z.string().min(1)).min(1, "Add at least one technology"),
-  keyFeatures: z.array(z.string().min(1)).min(1, "Add at least one feature"),
+  summary: z.string().min(10),
+  description: z.string().min(10).optional().or(z.literal("")),
+  techStack: z.array(techStackSchema),
+  keyFeatures: z.array(keyFeaturesSchema),
   liveUrl: z.string().url().optional().or(z.literal("")),
   repoUrl: z.string().url().optional().or(z.literal("")),
   isFlagship: z.boolean(),
@@ -108,20 +113,7 @@ export const createProjectSchema = z.object({
 
 export type createProjectSchemaType = z.infer<typeof createProjectSchema>;
 
-export const updateProjectSchema = z.object({
-  name: z.string().min(3),
-  role: z.string(),
-  summary: z.string().min(10),
-
-  techStack: z.array(z.string().min(1)).min(1),
-  keyFeatures: z.array(z.string().min(1)).min(1),
-
-  liveUrl: z.string().url().optional().or(z.literal("")),
-  repoUrl: z.string().url().optional().or(z.literal("")),
-
-  isFlagship: z.boolean(),
-  featured: z.boolean(),
-  published: z.boolean(),
-});
+//update projects
+export const updateProjectSchema = createProjectSchema.extend({});
 
 export type UpdateProjectSchemaType = z.infer<typeof updateProjectSchema>;

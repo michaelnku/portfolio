@@ -148,6 +148,7 @@ model About {
   headline    String
   subHeadline String
   shortBio    String
+  longBio     String
 
   profileImage Json?
   heroImage    Json?
@@ -157,7 +158,6 @@ model About {
   email    String?
   phone    String?
 
-  bioBlocks  Json
   experience Json
   skills     Json @default("[]")
 

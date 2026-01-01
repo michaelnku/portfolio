@@ -122,12 +122,6 @@ export const skillSchema = z.object({
   name: z.string().min(1),
 });
 
-export const bioBlockSchema = z.object({
-  type: z.enum(["text", "highlight"]),
-  value: z.string().min(1),
-  highlightType: z.enum(["name", "project"]).optional(),
-});
-
 export const experienceItemSchema = z.object({
   year: z.string().min(2), // "2024 – Present"
   title: z.string().min(2), // "Full-Stack Web Developer"
@@ -145,8 +139,7 @@ export const aboutSchema = z.object({
   headline: z.string().min(2),
   subHeadline: z.string().min(2),
   shortBio: z.string().min(5),
-
-  bioBlocks: z.array(bioBlockSchema),
+  longBio: z.string().min(1),
 
   experience: z.array(experienceItemSchema),
 

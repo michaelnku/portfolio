@@ -31,8 +31,8 @@ export async function saveAbout(values: AboutSchemaType) {
     headline,
     subHeadline,
     shortBio,
+    longBio,
 
-    bioBlocks,
     experience,
     skills,
 
@@ -55,7 +55,7 @@ export async function saveAbout(values: AboutSchemaType) {
       subHeadline,
       shortBio,
 
-      bioBlocks,
+      longBio,
       experience,
       skills,
 
@@ -74,7 +74,7 @@ export async function saveAbout(values: AboutSchemaType) {
       subHeadline,
       shortBio,
 
-      bioBlocks,
+      longBio,
       experience,
       skills,
 

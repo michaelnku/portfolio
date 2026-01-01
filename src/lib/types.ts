@@ -47,6 +47,7 @@ export type AboutDB = {
   headline: string;
   subHeadline: string;
   shortBio: string;
+  longBio: string;
 
   profileImage: string | null;
   heroImage: string | null;
@@ -55,11 +56,6 @@ export type AboutDB = {
   email: string | null;
   phone: string | null;
 
-  bioBlocks: {
-    type: "text" | "highlight";
-    value: string;
-    highlightType?: "name" | "project";
-  }[];
   experience: {
     year: string;
     title: string;

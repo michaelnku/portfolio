@@ -9,8 +9,19 @@ export async function getPublicAbout(): Promise<AboutUI | null> {
   if (!about) return null;
 
   return {
-    ...about,
-    highlights: (about.highlights as string[]) ?? [],
-    skills: (about.skills as { label: string; value: string }[]) ?? [],
+    fullName: about.fullName,
+    headline: about.headline,
+    subHeadline: about.subHeadline,
+    shortBio: about.shortBio,
+
+    bioBlocks: about.bioBlocks as AboutUI["bioBlocks"],
+    experience: about.experience as AboutUI["experience"],
+    skills: about.skills as AboutUI["skills"],
+
+    profileImage: about.profileImage,
+    heroImage: about.heroImage,
+    location: about.location,
+    email: about.email,
+    phone: about.phone,
   };
 }

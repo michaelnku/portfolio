@@ -17,35 +17,56 @@ export async function saveAbout(values: AboutSchemaType) {
     headline,
     subHeadline,
     shortBio,
+
+    bioBlocks,
+    experience,
+    skills,
+
     email,
     phone,
     location,
-    longBio,
+
     profileImage,
     heroImage,
   } = parsed.data;
 
-  const highlightsArray =
-    values.highlights
-      ?.split("\n")
-      .map((s) => s.trim())
-      .filter(Boolean) ?? [];
-
-  await prisma.about.create({
-    data: {
+  await prisma.about.upsert({
+    where: {
+      createdById: user.id,
+    },
+    create: {
       fullName,
-      subHeadline,
       headline,
+      subHeadline,
       shortBio,
-      email,
-      phone,
-      location,
-      longBio,
+
+      bioBlocks,
+      experience,
+      skills,
+
       profileImage,
       heroImage,
-      highlights: highlightsArray,
-      skills: values.skills ?? [],
+      location,
+      email,
+      phone,
+
       createdById: user.id,
+    },
+    update: {
+      fullName,
+      headline,
+      subHeadline,
+      shortBio,
+
+      bioBlocks,
+      experience,
+      skills,
+
+      profileImage,
+      heroImage,
+      location,
+      email,
+      phone,
     },
   });
 

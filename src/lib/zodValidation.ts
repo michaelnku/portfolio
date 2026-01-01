@@ -118,9 +118,21 @@ export const updateProjectSchema = createProjectSchema.extend({});
 export type UpdateProjectSchemaType = z.infer<typeof updateProjectSchema>;
 
 //about
-export const skillsSchema = z.object({
-  label: z.string().min(1),
+export const skillSchema = z.object({
+  name: z.string().min(1),
+});
+
+export const bioBlockSchema = z.object({
+  type: z.enum(["text", "highlight"]),
   value: z.string().min(1),
+  highlightType: z.enum(["name", "project"]).optional(),
+});
+
+export const experienceItemSchema = z.object({
+  year: z.string().min(2), // "2024 – Present"
+  title: z.string().min(2), // "Full-Stack Web Developer"
+  context: z.string().optional(), // "Creator — NexaMart Marketplace"
+  description: z.string().min(10),
 });
 
 export const aboutSchema = z.object({
@@ -128,16 +140,19 @@ export const aboutSchema = z.object({
   headline: z.string().min(2),
   subHeadline: z.string().min(2),
   shortBio: z.string().min(5),
-  longBio: z.string().optional(),
+
+  bioBlocks: z.array(bioBlockSchema),
+
+  experience: z.array(experienceItemSchema),
+
+  skills: z.array(skillSchema),
 
   profileImage: z.string().url().optional(),
   heroImage: z.string().url().optional(),
+
   location: z.string().optional(),
   email: z.string().email().optional(),
   phone: z.string().optional(),
-
-  skills: z.array(skillsSchema),
-  highlights: z.string().min(1),
 });
 
 export type AboutSchemaType = z.infer<typeof aboutSchema>;

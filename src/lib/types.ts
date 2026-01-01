@@ -45,8 +45,8 @@ export type AboutDB = {
   id: string;
   fullName: string;
   headline: string;
+  subHeadline: string;
   shortBio: string;
-  longBio: string | null;
 
   profileImage: string | null;
   heroImage: string | null;
@@ -54,11 +54,21 @@ export type AboutDB = {
   email: string | null;
   phone: string | null;
 
-  skills: { label: string; value: string }[];
-  highlights: string[];
+  bioBlocks: {
+    type: "text" | "highlight";
+    value: string;
+    highlightType?: "name" | "project";
+  }[];
+  experience: {
+    year: string;
+    title: string;
+    context?: string;
+    description: string;
+  }[];
+  skills: { name: string }[];
 
   createdAt: Date;
   updatedAt: Date;
 };
-
-export type AboutUI = AboutDB;
+export type AboutUI = Omit<AboutDB, "id" | "createdAt" | "updatedAt">;
+//export type AboutUI = AboutDB;

@@ -135,6 +135,11 @@ export const experienceItemSchema = z.object({
   description: z.string().min(10),
 });
 
+export const fileSchema = z.object({
+  url: z.string().url(),
+  key: z.string(),
+});
+
 export const aboutSchema = z.object({
   fullName: z.string().min(2),
   headline: z.string().min(2),
@@ -147,8 +152,9 @@ export const aboutSchema = z.object({
 
   skills: z.array(skillSchema),
 
-  profileImage: z.string().url().optional(),
-  heroImage: z.string().url().optional(),
+  profileImage: fileSchema.optional(),
+  heroImage: fileSchema.optional(),
+  resume: fileSchema.optional(),
 
   location: z.string().optional(),
   email: z.string().email().optional(),

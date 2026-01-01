@@ -50,6 +50,7 @@ export type AboutDB = {
 
   profileImage: string | null;
   heroImage: string | null;
+  resume: string | null;
   location: string | null;
   email: string | null;
   phone: string | null;

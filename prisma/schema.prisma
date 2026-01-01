@@ -149,8 +149,9 @@ model About {
   subHeadline String
   shortBio    String
 
-  profileImage String?
-  heroImage    String?
+  profileImage Json?
+  heroImage    Json?
+  resume       Json?
 
   location String?
   email    String?

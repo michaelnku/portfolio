@@ -27,6 +27,36 @@ export const ourFileRouter = {
 
       return { uploadedBy: metadata.user.id };
     }),
+  heroImage: f({
+    image: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(() => handleAuth())
+
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Upload complete for userId:", metadata.user.id);
+
+      console.log("file url", file.ufsUrl);
+
+      return { uploadedBy: metadata.user.id };
+    }),
+  resume: f({
+    pdf: {
+      maxFileSize: "8MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(() => handleAuth())
+
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Upload complete for userId:", metadata.user.id);
+
+      console.log("file url", file.ufsUrl);
+
+      return { uploadedBy: metadata.user.id };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

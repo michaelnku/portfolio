@@ -1,5 +1,11 @@
+@source "../node_modules/@uploadthing/react/dist"
+
+
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "tailwindcss";
+
+@import "uploadthing/tw/v4";
 
 html {
   scroll-behavior: smooth;

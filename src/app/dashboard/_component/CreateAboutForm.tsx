@@ -1,12 +1,12 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { aboutSchema, AboutSchemaType } from "@/lib/zodValidation";
-import { saveAbout } from "@/actions/aboutActions";
+import { deleteFileAction, saveAbout } from "@/actions/aboutActions";
 
 import {
   Form,
@@ -19,10 +19,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Loader2, Minus, Plus, Trash } from "lucide-react";
+import { UploadButton } from "@/utils/uploadthing";
+import Image from "next/image";
 
 export default function CreateAboutForm() {
   const [isPending, startTransition] = useTransition();
+
+  const [deletingKeys, setDeletingKeys] = useState<Set<string>>(new Set());
+
+  const [uploading, setUploading] = useState(false);
 
   const form = useForm<AboutSchemaType>({
     resolver: zodResolver(aboutSchema),
@@ -30,17 +36,19 @@ export default function CreateAboutForm() {
       fullName: "",
       headline: "",
       subHeadline: "",
-
       shortBio: "",
-      longBio: "",
 
-      profileImage: "",
-      heroImage: "",
+      bioBlocks: [],
+      experience: [],
+
+      profileImage: undefined,
+      heroImage: undefined,
+      resume: undefined,
+
       location: "",
       email: "",
       phone: "",
 
-      highlights: "",
       skills: [],
     },
   });
@@ -54,25 +62,54 @@ export default function CreateAboutForm() {
     name: "skills",
   });
 
+  const { control, handleSubmit, setValue, getValues } = form;
+
   const onSubmit = (values: AboutSchemaType) => {
-    startTransition(() => {
-      async () => {
-        const res = await saveAbout(values);
-        if (res?.error) return toast.error(res.error);
-        toast.success("About created!");
-      };
+    startTransition(async () => {
+      const res = await saveAbout(values);
+      if (res?.error) {
+        toast.error(res.error);
+        return;
+      }
+      toast.success("About saved successfully");
     });
   };
 
+  const deleteSingleFile = async (
+    field: "profileImage" | "heroImage" | "resume"
+  ) => {
+    const file = getValues(field);
+    if (!file) return;
+
+    if (deletingKeys.has(file.key)) return;
+
+    setDeletingKeys((prev) => new Set(prev).add(file.key));
+
+    try {
+      await deleteFileAction(file.key);
+      setValue(field, undefined);
+      toast.success("File deleted");
+    } catch {
+      toast.error("Failed to delete file");
+    } finally {
+      setDeletingKeys((prev) => {
+        const next = new Set(prev);
+        next.delete(file.key);
+        return next;
+      });
+    }
+  };
+
+  const watchedProfileImage = form.watch("profileImage");
+  const watchedHeroImage = form.watch("heroImage");
+  const watchedResume = form.watch("resume");
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 max-w-xl"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 max-w-xl">
         {/* NAME */}
         <FormField
-          control={form.control}
+          control={control}
           name="fullName"
           render={({ field }) => (
             <FormItem>
@@ -101,7 +138,7 @@ export default function CreateAboutForm() {
         />
         {/* subHEADLINE */}
         <FormField
-          control={form.control}
+          control={control}
           name="subHeadline"
           render={({ field }) => (
             <FormItem>
@@ -116,7 +153,7 @@ export default function CreateAboutForm() {
 
         {/* SHORT BIO */}
         <FormField
-          control={form.control}
+          control={control}
           name="shortBio"
           render={({ field }) => (
             <FormItem>
@@ -133,57 +170,111 @@ export default function CreateAboutForm() {
           )}
         />
 
-        {/* LONG BIO */}
-        <FormField
-          control={form.control}
-          name="longBio"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Long Bio</FormLabel>
-              <FormControl>
-                <Textarea
-                  rows={5}
-                  placeholder="Tell your journey, achievements, etc."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* BIO block */}
 
-        {/* IMAGES */}
-        <FormField
-          control={form.control}
-          name="profileImage"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Profile Image URL</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="https://your-photo.jpg" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* profile image */}
+        <section>
+          <h2 className="font-semibold text-xl">Profile Image</h2>
+          <UploadButton
+            endpoint="profileImage"
+            onClientUploadComplete={(res) => {
+              const file = res[0];
+              setValue("profileImage", { url: file.url, key: file.key });
+              toast.success("Profile image uploaded");
+            }}
+          />
 
-        <FormField
-          control={form.control}
-          name="heroImage"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Hero Image URL</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="https://banner-image.png" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          {watchedProfileImage && (
+            <div className="relative w-32 h-32">
+              <Image
+                src={watchedProfileImage.url}
+                alt="Profile image"
+                fill
+                className="rounded-full object-cover"
+              />
+
+              <button
+                type="button"
+                onClick={() => deleteSingleFile("profileImage")}
+                className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full"
+              >
+                <Trash className="w-4 h-4" />
+              </button>
+            </div>
           )}
-        />
+        </section>
+
+        {/* hero image */}
+        <section>
+          <h2 className="font-semibold text-xl">Hero Image</h2>
+
+          <UploadButton
+            endpoint="heroImage"
+            onClientUploadComplete={(res) => {
+              const file = res[0];
+              setValue("heroImage", { url: file.url, key: file.key });
+              toast.success("Hero image uploaded");
+            }}
+          />
+
+          {watchedHeroImage && (
+            <div className="relative w-40 h-40">
+              <Image
+                src={watchedHeroImage.url}
+                alt="Hero image"
+                fill
+                className="object-cover rounded-lg"
+              />
+
+              <button
+                type="button"
+                onClick={() => deleteSingleFile("heroImage")}
+                className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full"
+              >
+                <Trash className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* resume */}
+        <section>
+          <h2 className="font-semibold text-xl">Resume</h2>
+
+          <UploadButton
+            endpoint="resume"
+            onClientUploadComplete={(res) => {
+              const file = res[0];
+              setValue("resume", { url: file.url, key: file.key });
+              toast.success("Resume uploaded");
+            }}
+          />
+
+          {watchedResume && (
+            <div className="flex items-center gap-3">
+              <a
+                href={watchedResume.url}
+                target="_blank"
+                className="text-sm text-blue-600 underline"
+              >
+                View resume
+              </a>
+
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={() => deleteSingleFile("resume")}
+              >
+                <Trash className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
+        </section>
 
         {/* LOCATION + CONTACT */}
         <FormField
-          control={form.control}
+          control={control}
           name="location"
           render={({ field }) => (
             <FormItem>
@@ -197,7 +288,7 @@ export default function CreateAboutForm() {
         />
 
         <FormField
-          control={form.control}
+          control={control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -211,7 +302,7 @@ export default function CreateAboutForm() {
         />
 
         <FormField
-          control={form.control}
+          control={control}
           name="phone"
           render={({ field }) => (
             <FormItem>
@@ -224,25 +315,7 @@ export default function CreateAboutForm() {
           )}
         />
 
-        {/* HIGHLIGHTS */}
-        <FormField
-          control={form.control}
-          name="highlights"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Highlights</FormLabel>
-              <FormControl>
-                <Textarea
-                  rows={4}
-                  placeholder={`work experience
-`}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* experience */}
 
         {/* SKILLS */}
         <FormItem>
@@ -251,11 +324,7 @@ export default function CreateAboutForm() {
             {skillFields.map((field, index) => (
               <div key={field.id} className="flex gap-2">
                 <Input
-                  {...form.register(`skills.${index}.label`)}
-                  placeholder="Category (e.g. Frontend)"
-                />
-                <Input
-                  {...form.register(`skills.${index}.value`)}
+                  {...form.register(`skills.${index}.name`)}
                   placeholder="Value (e.g. Next.js)"
                 />
                 <Button
@@ -270,7 +339,7 @@ export default function CreateAboutForm() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => addSkill({ label: "", value: "" })}
+              onClick={() => addSkill({ name: "" })}
             >
               <Plus className="h-4 w-4" /> Add Skill
             </Button>

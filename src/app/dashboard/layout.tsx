@@ -24,7 +24,7 @@ export default async function DashboardLayout({
         <AdminSidebar />
 
         {/* MAIN CONTENT */}
-        <main className="flex-1 px-6 py-6">{children}</main>
+        <main className="flex-1 px-6 py-3">{children}</main>
       </div>
     </div>
   );

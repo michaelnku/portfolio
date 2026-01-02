@@ -129,10 +129,12 @@ export const experienceItemSchema = z.object({
   description: z.string().min(10),
 });
 
-export const fileSchema = z.object({
-  url: z.string().url(),
-  key: z.string(),
-});
+export const fileSchema = z
+  .object({
+    url: z.string().url(),
+    key: z.string(),
+  })
+  .optional();
 
 export const aboutSchema = z.object({
   fullName: z.string().min(2),
@@ -145,9 +147,9 @@ export const aboutSchema = z.object({
 
   skills: z.array(skillSchema),
 
-  profileImage: fileSchema.optional(),
-  heroImage: fileSchema.optional(),
-  resume: fileSchema.optional(),
+  profileImage: fileSchema,
+  heroImage: fileSchema,
+  resume: fileSchema,
 
   location: z.string().optional(),
   email: z.string().email().optional(),

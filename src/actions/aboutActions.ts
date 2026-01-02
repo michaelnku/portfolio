@@ -92,3 +92,28 @@ export async function saveAbout(values: AboutSchemaType) {
 
   return { success: true };
 }
+
+export async function deleteAbout() {
+  const user = await CurrentUser();
+
+  if (!user || user.role !== "ADMIN") {
+    return { error: "Unauthorized" };
+  }
+
+  const about = await prisma.about.findUnique({
+    where: { createdById: user.id },
+  });
+
+  if (!about) {
+    return { error: "About not found" };
+  }
+
+  await prisma.about.delete({
+    where: { id: about.id },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/dashboard/about");
+
+  return { success: true };
+}

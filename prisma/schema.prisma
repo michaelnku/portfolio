@@ -158,7 +158,7 @@ model About {
   email    String?
   phone    String?
 
-  experience Json
+  experience Json @default("[]")
   skills     Json @default("[]")
 
   createdById String

@@ -41,6 +41,11 @@ export type ProjectDB = {
 
 export type ProjectUI = ProjectDB;
 
+export type UploadedFile = {
+  url: string;
+  key: string;
+};
+
 export type AboutDB = {
   id: string;
   fullName: string;
@@ -49,9 +54,10 @@ export type AboutDB = {
   shortBio: string;
   longBio: string;
 
-  profileImage: string | null;
-  heroImage: string | null;
-  resume: string | null;
+  profileImage?: UploadedFile | null;
+  heroImage?: UploadedFile | null;
+  resume?: UploadedFile | null;
+
   location: string | null;
   email: string | null;
   phone: string | null;
@@ -67,5 +73,4 @@ export type AboutDB = {
   createdAt: Date;
   updatedAt: Date;
 };
-export type AboutUI = Omit<AboutDB, "id" | "createdAt" | "updatedAt">;
-//export type AboutUI = AboutDB;
+export type AboutUI = AboutDB;

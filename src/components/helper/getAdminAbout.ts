@@ -1,9 +1,18 @@
 import { prisma } from "@/lib/prisma";
+import { CurrentUser } from "@/lib/currentUser";
 import { AboutUI, UploadedFile } from "@/lib/types";
 
-export async function getPublicAbout(): Promise<AboutUI | null> {
-  const about = await prisma.about.findFirst({
-    orderBy: { createdAt: "desc" },
+export async function getAdminAbout(): Promise<AboutUI | null> {
+  const user = await CurrentUser();
+
+  if (!user || user.role !== "ADMIN") {
+    return null;
+  }
+
+  const about = await prisma.about.findUnique({
+    where: {
+      createdById: user.id,
+    },
   });
 
   if (!about) return null;
@@ -16,9 +25,6 @@ export async function getPublicAbout(): Promise<AboutUI | null> {
     shortBio: about.shortBio,
     longBio: about.longBio,
 
-    experience: about.experience as AboutUI["experience"],
-    skills: about.skills as AboutUI["skills"],
-
     profileImage: about.profileImage as UploadedFile | undefined,
     heroImage: about.heroImage as UploadedFile | undefined,
     resume: about.resume as UploadedFile | undefined,
@@ -26,6 +32,9 @@ export async function getPublicAbout(): Promise<AboutUI | null> {
     location: about.location,
     email: about.email,
     phone: about.phone,
+
+    experience: about.experience as AboutUI["experience"],
+    skills: about.skills as { name: string }[],
 
     createdAt: about.createdAt,
     updatedAt: about.updatedAt,

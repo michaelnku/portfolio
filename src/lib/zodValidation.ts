@@ -150,10 +150,6 @@ export const aboutSchema = z.object({
   profileImage: fileSchema,
   heroImage: fileSchema,
   resume: fileSchema,
-
-  location: z.string().optional(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
 });
 
 export type AboutSchemaType = z.infer<typeof aboutSchema>;

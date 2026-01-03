@@ -56,10 +56,6 @@ export default function CreateAboutForm({ initialData }: Props) {
       profileImage: initialData?.profileImage ?? undefined,
       heroImage: initialData?.heroImage ?? undefined,
       resume: initialData?.resume ?? undefined,
-
-      location: initialData?.location ?? "",
-      email: initialData?.email ?? "",
-      phone: initialData?.phone ?? "",
     },
   });
 
@@ -102,10 +98,6 @@ export default function CreateAboutForm({ initialData }: Props) {
       profileImage: initialData.profileImage ?? undefined,
       heroImage: initialData.heroImage ?? undefined,
       resume: initialData.resume ?? undefined,
-
-      location: initialData.location ?? "",
-      email: initialData.email ?? "",
-      phone: initialData.phone ?? "",
     });
 
     setHydrated(true);
@@ -175,7 +167,11 @@ export default function CreateAboutForm({ initialData }: Props) {
           variant="destructive"
           onClick={() => handleAboutReset()}
         >
-          Reset About
+          {isPending ? (
+            <Loader2 className="animate-spin w-4 h-4" />
+          ) : (
+            " Reset About"
+          )}
         </Button>
       </div>
       <Form {...form}>
@@ -259,49 +255,6 @@ export default function CreateAboutForm({ initialData }: Props) {
                     placeholder="I focus on building systems..."
                     {...field}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* LOCATION + CONTACT */}
-          <FormField
-            control={control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Location</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="City, Country" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} placeholder="you@email.com" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="+1 555-555-5555" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

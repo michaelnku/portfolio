@@ -43,7 +43,7 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:flex h-[calc(100vh-64px)] w-64 flex-col border-r bg-background px-4 py-6">
+    <aside className="hidden fixed top-16 left-0 z-20 md:flex h-[calc(100vh-64px)] w-64 flex-col border-r bg-background px-4 py-6">
       <nav className="flex flex-col gap-2">
         {sidebarLinks.map((item) => {
           const isActive =

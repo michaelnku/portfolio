@@ -8,7 +8,6 @@ import { UTApi } from "uploadthing/server";
 
 const utapi = new UTApi();
 
-//to delete images on preview before creating product
 export const deleteFileAction = async (keyToDelete: string) => {
   const user = await CurrentUser();
   if (!user) return { error: "Unauthorized access" };
@@ -36,10 +35,6 @@ export async function saveAbout(values: AboutSchemaType) {
     experience,
     skills,
 
-    email,
-    phone,
-    location,
-
     profileImage,
     heroImage,
     resume,
@@ -62,9 +57,6 @@ export async function saveAbout(values: AboutSchemaType) {
       profileImage,
       heroImage,
       resume,
-      location,
-      email,
-      phone,
 
       createdById: user.id,
     },
@@ -81,9 +73,6 @@ export async function saveAbout(values: AboutSchemaType) {
       profileImage,
       heroImage,
       resume,
-      location,
-      email,
-      phone,
     },
   });
 

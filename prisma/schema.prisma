@@ -26,11 +26,12 @@ model User {
 
   role UserRole @default(USER)
 
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  portfolios Portfolio[]
-  projects   Project[]
-  abouts     About[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  // portfolios Portfolio[]
+  projects  Project[]
+  contact   Contact?
+  about     About?
 }
 
 enum UserRole {
@@ -77,19 +78,6 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-model Portfolio {
-  id          String  @id @default(cuid())
-  title       String
-  description String?
-  published   Boolean @default(false)
-
-  createdById String
-  createdBy   User   @relation(fields: [createdById], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Project {
   id          String  @id @default(cuid())
   name        String
@@ -114,12 +102,49 @@ model Project {
   updatedAt DateTime @updatedAt
 }
 
+// model Portfolio {
+//   id          String  @id @default(cuid())
+//   title       String
+//   description String?
+//   published   Boolean @default(false)
+
+//   createdById String
+//   createdBy   User   @relation(fields: [createdById], references: [id])
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
 model PortfolioAnalytics {
   id              String   @id @default(cuid())
   date            DateTime @unique
   totalVisitors   Int      @default(0)
   resumeDownloads Int      @default(0)
   contactSubmits  Int      @default(0)
+}
+
+model Contact {
+  id String @id @default(cuid())
+
+  email    String
+  phone    String
+  location String
+
+  github   String?
+  linkedin String?
+  twitter  String?
+  website  String?
+
+  openToRelocation Boolean @default(false)
+  availableForWork Boolean @default(false)
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([createdById])
 }
 
 model ContactMessage {
@@ -142,8 +167,7 @@ enum ContactSource {
 }
 
 model About {
-  id String @id @default(cuid())
-
+  id          String @id @default(cuid())
   fullName    String
   headline    String
   subHeadline String
@@ -153,10 +177,6 @@ model About {
   profileImage Json?
   heroImage    Json?
   resume       Json?
-
-  location String?
-  email    String?
-  phone    String?
 
   experience Json @default("[]")
   skills     Json @default("[]")

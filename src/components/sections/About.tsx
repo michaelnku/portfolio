@@ -22,14 +22,14 @@ export default async function AboutSection() {
         {/* IMAGE */}
         {about.profileImage?.url && (
           <div className="flex justify-center md:justify-start">
-            <div className="relative rounded-2xl p-[3px] bg-gradient-to-tr from-blue-500 to-purple-600">
-              <div className="rounded-2xl bg-background p-2">
+            <div className="relative rounded-full p-[3px] bg-gradient-to-tr from-blue-500 to-purple-600">
+              <div className="rounded-full bg-background p-2">
                 <Image
                   src={about.profileImage.url}
                   alt={about.fullName}
                   width={260}
-                  height={320}
-                  className="rounded-xl object-cover"
+                  height={260} // 👈 make it square
+                  className="rounded-full object-cover"
                   priority
                 />
               </div>
@@ -78,18 +78,26 @@ export default async function AboutSection() {
         </section>
       )}
 
-      {/* EXPERIENCE */}
+      {/* EXPERIENCE TIMELINE */}
       {about.experience.length > 0 && (
         <section className="space-y-8">
           <h2 className="text-2xl font-semibold">Experience & Journey</h2>
 
           <div className="space-y-6 border-l pl-6">
             {about.experience.map((item, index) => (
-              <div key={index} className="relative">
+              <div key={index} className="relative space-y-1">
                 <span className="absolute -left-[10px] top-2 h-3 w-3 rounded-full bg-blue-500" />
 
-                <p className="text-sm text-muted-foreground">{item.year}</p>
-                <h3 className="font-medium">{item.title}</h3>
+                <p className="text-xs text-muted-foreground">{item.year}</p>
+                <h3 className="font-medium text-sm">
+                  {item.title}
+                  {item.context && (
+                    <span className="text-muted-foreground font-normal">
+                      {" "}
+                      — {item.context}
+                    </span>
+                  )}
+                </h3>
 
                 <p className="text-muted-foreground text-sm">
                   {item.description}

@@ -34,10 +34,12 @@ export async function saveContact(values: ContactSchemaType) {
       email,
       phone,
       location,
-      github,
-      linkedin,
-      twitter,
-      website,
+
+      github: values.github || null,
+      linkedin: values.linkedin || null,
+      twitter: values.twitter || null,
+      website: values.website || null,
+
       openToRelocation,
       availableForWork,
       createdById: user.id,
@@ -46,10 +48,12 @@ export async function saveContact(values: ContactSchemaType) {
       email,
       phone,
       location,
-      github,
-      linkedin,
-      twitter,
-      website,
+
+      github: values.github || null,
+      linkedin: values.linkedin || null,
+      twitter: values.twitter || null,
+      website: values.website || null,
+
       openToRelocation,
       availableForWork,
     },

@@ -104,8 +104,8 @@ export default function CreateAboutForm({ initialData }: Props) {
   }, [initialData, reset]);
 
   const onSubmit = (values: AboutSchemaType) => {
-    startTransition(() => {
-      saveAbout(values).then((res) => {
+    startTransition(async () => {
+      await saveAbout(values).then((res) => {
         if (res?.error) {
           toast.error(res.error);
           return;
@@ -159,14 +159,10 @@ export default function CreateAboutForm({ initialData }: Props) {
   const watchedResume = form.watch("resume");
 
   return (
-    <main className="space-y-12 max-w-xl">
+    <main className="space-y-12 max-w-xl mx-auto">
       <div className="flex justify-between">
         <h1 className="font-medium text-xl">About Me</h1>
-        <Button
-          type="button"
-          variant="destructive"
-          onClick={() => handleAboutReset()}
-        >
+        <Button type="button" variant="destructive" onClick={handleAboutReset}>
           {isPending ? (
             <Loader2 className="animate-spin w-4 h-4" />
           ) : (

@@ -9,6 +9,7 @@ import {
   Mail,
   BarChart3,
   User2,
+  Phone,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -18,9 +19,14 @@ const sidebarLinks = [
     icon: LayoutDashboard,
   },
   {
-    label: "About Me",
+    label: "About",
     href: "/dashboard/about",
     icon: User2,
+  },
+  {
+    label: "Contact",
+    href: "/dashboard/contact",
+    icon: Phone,
   },
   {
     label: "Projects",

@@ -1,11 +1,22 @@
 import Image from "next/image";
 import ResumeButton from "@/components/home/ResumeButton";
 import { getPublicAbout } from "@/components/helper/getPublicAbout";
+import { getPublicProjects } from "../helper/getPublicProjects";
 
 export default async function AboutSection() {
   const about = await getPublicAbout();
 
   if (!about) return null;
+
+  const project = await getPublicProjects();
+  if (!project) return null;
+
+  const keyWords = [
+    { text: about.fullName, highlightStyle: "" },
+    { text: about.headline, highlightStyle: "" },
+    // { text: project.name, highlightStyle: "" },
+  ];
+
   return (
     <section className="mx-auto max-w-5xl px-6 space-y-20">
       {/* HEADER */}

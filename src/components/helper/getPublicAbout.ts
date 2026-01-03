@@ -23,10 +23,6 @@ export async function getPublicAbout(): Promise<AboutUI | null> {
     heroImage: about.heroImage as UploadedFile | undefined,
     resume: about.resume as UploadedFile | undefined,
 
-    location: about.location,
-    email: about.email,
-    phone: about.phone,
-
     createdAt: about.createdAt,
     updatedAt: about.updatedAt,
   };

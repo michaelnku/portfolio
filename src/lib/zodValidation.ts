@@ -153,3 +153,34 @@ export const aboutSchema = z.object({
 });
 
 export type AboutSchemaType = z.infer<typeof aboutSchema>;
+
+const optionalUrl = z
+  .string()
+  .trim()
+  .or(z.literal(""))
+  .transform((val) => {
+    if (val === "") return "";
+
+    if (val.startsWith("http://") || val.startsWith("https://")) {
+      return val;
+    }
+
+    return `https://${val}`;
+  })
+  .refine((val) => val === "" || /^https?:\/\/.+\..+/.test(val), "Invalid URL");
+
+export const contactSchema = z.object({
+  email: z.string().email(),
+  phone: z.string().min(5),
+  location: z.string().min(2),
+
+  github: optionalUrl,
+  linkedin: optionalUrl,
+  twitter: optionalUrl,
+  website: optionalUrl,
+
+  openToRelocation: z.boolean(),
+  availableForWork: z.boolean(),
+});
+
+export type ContactSchemaType = z.infer<typeof contactSchema>;

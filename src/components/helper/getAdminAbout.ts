@@ -29,10 +29,6 @@ export async function getAdminAbout(): Promise<AboutUI | null> {
     heroImage: about.heroImage as UploadedFile | undefined,
     resume: about.resume as UploadedFile | undefined,
 
-    location: about.location,
-    email: about.email,
-    phone: about.phone,
-
     experience: about.experience as AboutUI["experience"],
     skills: about.skills as { name: string }[],
 

@@ -58,10 +58,6 @@ export type AboutDB = {
   heroImage?: UploadedFile | null;
   resume?: UploadedFile | null;
 
-  location: string | null;
-  email: string | null;
-  phone: string | null;
-
   experience: {
     year: string;
     title: string;
@@ -74,3 +70,22 @@ export type AboutDB = {
   updatedAt: Date;
 };
 export type AboutUI = AboutDB;
+
+export type ContactUI = {
+  id: string;
+
+  email: string;
+  phone: string;
+  location: string;
+
+  github?: string | null;
+  linkedin?: string | null;
+  twitter?: string | null;
+  website?: string | null;
+
+  openToRelocation: boolean;
+  availableForWork: boolean;
+
+  createdAt: Date;
+  updatedAt: Date;
+};

@@ -72,215 +72,217 @@ export default function CreateProjectForm() {
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 max-w-xl shadow rounded p-6"
-      >
-        <h1 className="font-medium text-lg">Add Your Project</h1>
-        {/* PROJECT NAME */}
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Project Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <main className="space-y-12 max-w-xl mx-auto">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 shadow rounded p-6"
+        >
+          <h1 className="font-medium text-lg">Add Your Project</h1>
+          {/* PROJECT NAME */}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Project Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your Role</FormLabel>
-              <FormControl>
-                <Input placeholder="Full-Stack Developer" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your Role</FormLabel>
+                <FormControl>
+                  <Input placeholder="Full-Stack Developer" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* DESCRIPTION */}
-        <FormField
-          control={form.control}
-          name="summary"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Project Summary</FormLabel>
-              <FormControl>
-                <Textarea rows={3} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* DESCRIPTION */}
+          <FormField
+            control={form.control}
+            name="summary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Project Summary</FormLabel>
+                <FormControl>
+                  <Textarea rows={3} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="keyFeatures"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Key Features (one per line)</FormLabel>
-              <FormControl>
-                <Textarea
-                  rows={4}
-                  placeholder={`Modern dashboard UI
+          <FormField
+            control={form.control}
+            name="keyFeatures"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Key Features (one per line)</FormLabel>
+                <FormControl>
+                  <Textarea
+                    rows={4}
+                    placeholder={`Modern dashboard UI
 Role-based access
 Permission-based access
 `}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* TECH STACK */}
-        <FormItem>
-          <FormLabel>Tech Stack</FormLabel>
+          {/* TECH STACK */}
+          <FormItem>
+            <FormLabel>Tech Stack</FormLabel>
 
-          <div className="space-y-3">
-            {techFields.map((field, index) => (
-              <div
-                key={field.id}
-                className="grid grid-cols-2 gap-4 items-center"
-              >
-                <FormField
-                  control={form.control}
-                  name={`techStack.${index}.key`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs">Label</FormLabel>
-                      <Input {...field} placeholder="e.g. frontend" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name={`techStack.${index}.value`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs">Value</FormLabel>
-                      <Input {...field} placeholder="e.g. Next.js" />
-                    </FormItem>
-                  )}
-                />
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => removeTech(index)}
+            <div className="space-y-3">
+              {techFields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="grid grid-cols-2 gap-4 items-center"
                 >
-                  <Minus className="mr-2 h-4 w-4" /> Remove
-                </Button>
-              </div>
-            ))}
+                  <FormField
+                    control={form.control}
+                    name={`techStack.${index}.key`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Label</FormLabel>
+                        <Input {...field} placeholder="e.g. frontend" />
+                      </FormItem>
+                    )}
+                  />
 
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => addTech({ key: "", value: "" })}
-            >
-              <Plus className="mr-2 h-4 w-4" /> Add technology
-            </Button>
-          </div>
+                  <FormField
+                    control={form.control}
+                    name={`techStack.${index}.value`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Value</FormLabel>
+                        <Input {...field} placeholder="e.g. Next.js" />
+                      </FormItem>
+                    )}
+                  />
 
-          <FormMessage />
-        </FormItem>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => removeTech(index)}
+                  >
+                    <Minus className="mr-2 h-4 w-4" /> Remove
+                  </Button>
+                </div>
+              ))}
 
-        {/* LIVE URL */}
-        <FormField
-          control={form.control}
-          name="liveUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Live URL</FormLabel>
-              <FormControl>
-                <Input placeholder="https://…" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => addTech({ key: "", value: "" })}
+              >
+                <Plus className="mr-2 h-4 w-4" /> Add technology
+              </Button>
+            </div>
 
-        {/* REPO URL */}
-        <FormField
-          control={form.control}
-          name="repoUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Repository URL</FormLabel>
-              <FormControl>
-                <Input placeholder="https://github.com/…" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormMessage />
+          </FormItem>
 
-        <FormField
-          control={form.control}
-          name="isFlagship"
-          render={({ field }) => (
-            <FormItem className="flex items-center gap-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel>Flagship Project</FormLabel>
-            </FormItem>
-          )}
-        />
+          {/* LIVE URL */}
+          <FormField
+            control={form.control}
+            name="liveUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Live URL</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://…" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* FEATURED */}
-        <FormField
-          control={form.control}
-          name="featured"
-          render={({ field }) => (
-            <FormItem className="flex items-center gap-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel>Featured project</FormLabel>
-            </FormItem>
-          )}
-        />
+          {/* REPO URL */}
+          <FormField
+            control={form.control}
+            name="repoUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Repository URL</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://github.com/…" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* PUBLISHED */}
-        <FormField
-          control={form.control}
-          name="published"
-          render={({ field }) => (
-            <FormItem className="flex items-center gap-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel>Publish immediately</FormLabel>
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="isFlagship"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel>Flagship Project</FormLabel>
+              </FormItem>
+            )}
+          />
 
-        <Button type="submit" disabled={isPending}>
-          {isPending ? "Creating..." : "Create Project"}
-        </Button>
-      </form>
-    </Form>
+          {/* FEATURED */}
+          <FormField
+            control={form.control}
+            name="featured"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel>Featured project</FormLabel>
+              </FormItem>
+            )}
+          />
+
+          {/* PUBLISHED */}
+          <FormField
+            control={form.control}
+            name="published"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel>Publish immediately</FormLabel>
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Creating..." : "Create Project"}
+          </Button>
+        </form>
+      </Form>
+    </main>
   );
 }

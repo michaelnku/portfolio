@@ -8,6 +8,24 @@ const Hero = async () => {
 
   if (!about) return null;
 
+  const skillsStack = about.skills?.map((s) => s.name) ?? [];
+
+  const MOBILE_VISIBLE = 4;
+  const DESKTOP_VISIBLE = skillsStack.length;
+
+  const visibleSkills =
+    DESKTOP_VISIBLE > MOBILE_VISIBLE
+      ? skillsStack.slice(0, MOBILE_VISIBLE)
+      : skillsStack;
+
+  const remainingCount = skillsStack.length - visibleSkills.length;
+
+  const keyWords = [
+    { text: "scalable", highlightStyle: "" },
+    { text: "backend systems", highlightStyle: "" },
+    { text: "architecture", highlightStyle: "" },
+  ];
+
   return (
     <section className="relative overflow-hidden py-6 mx-auto max-w-6xl px-6">
       {/* BACKGROUND GLOW */}
@@ -24,7 +42,7 @@ const Hero = async () => {
           </span>
 
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            <h1 className="text-3xl md:text-5xl font-bold leading-tight">
               I’m <span className="text-blue-500">{about.fullName}</span>
             </h1>
 
@@ -35,6 +53,19 @@ const Hero = async () => {
 
           <p className="max-w-xl text-base md:text-lg leading-relaxed text-muted-foreground">
             {about.shortBio}
+          </p>
+
+          <p className="text-sm text-muted-foreground">
+            Tech stack:{" "}
+            <span className="sm:hidden text-foreground/80 font-medium">
+              {visibleSkills.join(" · ")}
+              {remainingCount > 0 && (
+                <span className="ml-1 ">· +{remainingCount} more</span>
+              )}
+            </span>
+            <span className="hidden sm:inline text-foreground/80 font-medium">
+              {skillsStack.join(" · ")}
+            </span>
           </p>
 
           {/* CTA */}

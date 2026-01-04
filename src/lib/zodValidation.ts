@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { boolean } from "zod";
 
 //register a user
 export const registerSchema = z
@@ -184,3 +184,18 @@ export const contactSchema = z.object({
 });
 
 export type ContactSchemaType = z.infer<typeof contactSchema>;
+
+export const contactMessageSchema = z.object({
+  name: z.string().min(2, "Please enter your full name").max(100),
+
+  email: z.string().email("Please enter a valid email address"),
+
+  subject: z.string().min(2).max(100).optional().or(z.literal("")),
+
+  message: z
+    .string()
+    .min(10, "Message should be at least 10 characters")
+    .max(2000),
+});
+
+export type ContactMessageSchemaType = z.infer<typeof contactMessageSchema>;

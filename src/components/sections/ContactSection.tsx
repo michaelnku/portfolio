@@ -25,19 +25,19 @@ export default function ContactSection({ contact, resumeUrl }: Props) {
       {/* AVAILABILITY */}
       <div className="flex flex-wrap gap-3">
         {contact.availableForWork && (
-          <span className="rounded-full bg-green-500/10 text-green-600 px-4 py-1 text-sm">
+          <span className="rounded-full bg-green-500/10 text-green-600 px-4 py-1 text-sm hover:shadow-md">
             Open to work
           </span>
         )}
 
         {contact.openToRelocation && (
-          <span className="rounded-full bg-blue-500/10 text-blue-600 px-4 py-1 text-sm">
+          <span className="rounded-full bg-blue-500/10 text-blue-600 px-4 py-1 text-sm hover:shadow-md">
             Open to relocation
           </span>
         )}
 
         {contact.location && (
-          <span className="flex items-center gap-2 rounded-full border px-4 py-1 text-sm text-muted-foreground">
+          <span className="flex items-center gap-2 rounded-full border px-4 py-1 text-sm text-muted-foreground hover:shadow-md">
             <MapPin className="h-4 w-4" />
             {contact.location}
           </span>
@@ -47,7 +47,7 @@ export default function ContactSection({ contact, resumeUrl }: Props) {
       {/* CONTACT METHODS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* EMAIL */}
-        <div className="rounded-xl border p-6 space-y-4">
+        <div className="rounded-xl border p-6 space-y-4 hover:shadow-lg">
           <div className="flex items-center gap-3">
             <Mail className="h-5 w-5 text-blue-500" />
             <h3 className="font-medium text-lg">Email</h3>
@@ -66,7 +66,7 @@ export default function ContactSection({ contact, resumeUrl }: Props) {
         </div>
 
         {/* LOCATION */}
-        <div className="rounded-xl border p-6 space-y-4">
+        <div className="rounded-xl border p-6 space-y-4 hover:shadow-lg">
           <div className="flex items-center gap-3">
             <MapPin className="h-5 w-5 text-purple-500" />
             <h3 className="font-medium text-lg">Location</h3>

@@ -89,3 +89,13 @@ export type ContactUI = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type MessageUI = {
+  id: string;
+  name: string;
+  email: string;
+  subject: string | null;
+  message: string;
+  read: boolean;
+  createdAt: Date;
+};

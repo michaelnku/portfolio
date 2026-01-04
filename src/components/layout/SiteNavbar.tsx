@@ -13,6 +13,7 @@ import {
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import HireMeButton from "../hire/HireMeButton";
 
 const navLinks = [
   { label: "Home", href: "#home", id: "home" },
@@ -65,9 +66,7 @@ export default function SiteNavbar() {
                 })}
 
                 <div className="pt-6 border-t px-6">
-                  <Button className="w-full" onClick={() => setOpen(false)}>
-                    Hire Me
-                  </Button>
+                  <HireMeButton />
                 </div>
               </div>
             </SheetContent>
@@ -115,9 +114,10 @@ export default function SiteNavbar() {
         </nav>
 
         {/* RIGHT */}
-        <Button size="sm" className="hidden sm:inline-flex">
-          Hire Me
-        </Button>
+        <div className="hidden sm:inline-flex">
+          <HireMeButton />
+          {/* <HireMeButton  variant="primary"/> */}
+        </div>
       </div>
     </header>
   );

@@ -73,6 +73,7 @@ export default function AboutSection({ about, resumeUrl }: Props) {
                   hover:text-foreground
                   hover:border-foreground/30
                   transition
+                  hover:shadow-md
                 "
               >
                 {skill.name}

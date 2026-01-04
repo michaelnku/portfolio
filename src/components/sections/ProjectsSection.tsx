@@ -41,7 +41,7 @@ const ProjectsSection = ({ project }: Props) => {
                 <h2 className="text-2xl font-semibold">{project.name}</h2>
 
                 {project.isFlagship && (
-                  <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm text-blue-600">
+                  <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm text-blue-600 hover:animate-pulse hover:shadow">
                     Flagship Project
                   </span>
                 )}
@@ -95,7 +95,7 @@ const ProjectsSection = ({ project }: Props) => {
                   {project.techStack.map((tech) => (
                     <li
                       key={tech.key}
-                      className="rounded-full border px-4 py-1 text-muted-foreground"
+                      className="rounded-full border px-4 py-1 text-muted-foreground hover:shadow-md"
                     >
                       {tech.value}
                     </li>

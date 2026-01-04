@@ -7,7 +7,6 @@ export const publicRoutes = [
   "/about",
   "/projects",
   "/contact",
-  "/api/contact",
 ];
 
 export const authRoutes = [

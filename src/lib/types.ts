@@ -96,6 +96,7 @@ export type MessageUI = {
   email: string;
   subject: string | null;
   message: string;
+  formattedDate: string;
   read: boolean;
   createdAt: Date;
 };

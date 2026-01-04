@@ -1,9 +1,18 @@
 import { getAdminMessages } from "@/components/helper/getAdminMessages";
-import MessagesTable from "../_component/MessagesTable";
 import MessagesCard from "../_component/MessagesCards";
+import MessagesDataTable from "../_component/MessagesDataTable";
 
 export default async function MessagesPage() {
-  const messages = await getAdminMessages();
+  const rawMessages = await getAdminMessages();
+
+  const messages = rawMessages.map((m) => ({
+    ...m,
+    formattedDate: new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(m.createdAt)),
+  }));
 
   return (
     <div className="space-y-6">
@@ -19,7 +28,7 @@ export default async function MessagesPage() {
       ) : (
         <>
           <div className="hidden md:block">
-            <MessagesTable messages={messages} />
+            <MessagesDataTable messages={messages} />
           </div>
 
           <div className="md:hidden">

@@ -2,14 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { markMessageRead, deleteMessage } from "@/actions/messageActions";
-import { MailOpen, Trash, Reply, Clock } from "lucide-react";
+import { MailOpen, Trash, Reply, Clock, Loader } from "lucide-react";
 import { MessageUI } from "@/lib/types";
+import { useState } from "react";
+import { toast } from "sonner";
 
 type Props = {
   messages: MessageUI[];
 };
 
 export default function MessagesCard({ messages }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <div className="space-y-4">
       {messages.map((msg) => (
@@ -42,7 +45,7 @@ export default function MessagesCard({ messages }: Props) {
           <div className="flex items-center justify-between pt-2">
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Clock className="h-3 w-3" />
-              {new Date(msg.createdAt).toLocaleDateString()}
+              {msg.formattedDate}
             </div>
 
             <div className="flex gap-2">
@@ -67,9 +70,17 @@ export default function MessagesCard({ messages }: Props) {
               <Button
                 size="icon"
                 variant="destructive"
-                onClick={() => deleteMessage(msg.id)}
+                disabled={isLoading}
+                onClick={() => {
+                  deleteMessage(msg.id), setIsLoading(true);
+                  toast.success("Message deleted successfully!");
+                }}
               >
-                <Trash className="h-4 w-4" />
+                {isLoading ? (
+                  <Loader className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </div>

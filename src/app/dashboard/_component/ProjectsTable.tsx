@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ProjectUI } from "@/lib/types";
 import { DeleteProjectModal } from "./DeleteProjectModal";
 import Link from "next/link";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { FolderCode } from "lucide-react";
 
 interface Props {
   projects: ProjectUI[];
@@ -77,9 +79,13 @@ export default function ProjectsTable({ projects }: Props) {
       </table>
 
       {projects.length === 0 && (
-        <div className="p-6 text-center text-muted-foreground">
-          No projects yet
-        </div>
+        <EmptyState
+          icon={<FolderCode className="h-6 w-6" />}
+          title="No projects found"
+          description="Projects you add will appear here and can be managed anytime."
+          actionLabel="Add Project"
+          actionHref="/dashboard/projects/add"
+        />
       )}
     </div>
   );

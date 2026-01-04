@@ -22,7 +22,7 @@ const HomeContent = async () => {
       </section>
 
       <section id="about" className="section-spacing">
-        <AboutSection about={about} project={project} />
+        <AboutSection about={about} resumeUrl={about?.resume?.url} />
       </section>
 
       <section id="projects" className="section-spacing">

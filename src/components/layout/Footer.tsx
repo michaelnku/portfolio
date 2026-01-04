@@ -1,124 +1,152 @@
+// components/layout/Footer.tsx
 import Link from "next/link";
+import { getPublicAbout } from "@/components/helper/getPublicAbout";
+import { getPublicContact } from "@/components/helper/getPublicContact";
+import { getPublicProjects } from "@/components/helper/getPublicProjects";
 
-const Footer = () => {
+export default async function Footer() {
+  const [about, contact, projects] = await Promise.all([
+    getPublicAbout(),
+    getPublicContact(),
+    getPublicProjects(),
+  ]);
+
+  const flagship = projects?.find((p) => p.isFlagship);
+
   return (
     <footer className="border-t bg-background">
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-6 py-14 space-y-12">
         {/* TOP */}
-        <div className="flex flex-col md:flex-row justify-between gap-10">
-          {/* BRAND */}
-          <div className="space-y-3 max-w-sm">
-            <h3 className="text-lg font-semibold">Michael Nku </h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          {/* BRAND / SUMMARY */}
+          <div className="space-y-4 md:col-span-1">
+            <h3 className="text-lg font-semibold">
+              {about?.fullName ?? "Michael Nku"}
+            </h3>
+
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Full-Stack Web Developer focused on building scalable
-              marketplaces, secure web applications, and clean system
-              architectures.
+              {about?.shortBio ??
+                "Full-Stack Web Developer focused on building reliable, scalable, and secure web applications."}
             </p>
-            <p className="text-sm hidden text-muted-foreground">
-              🚀 Creator of NexaMart Marketplace
-            </p>
+
+            {about?.headline && (
+              <p className="text-xs text-muted-foreground">{about.headline}</p>
+            )}
           </div>
 
-          {/* LINKS */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 text-sm">
-            <div className="space-y-3">
-              <h4 className="font-medium">Navigation</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link
-                    href="#home"
-                    className="hover:text-foreground transition"
-                  >
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#about"
-                    className="hover:text-foreground transition"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#projects"
-                    className="hover:text-foreground transition"
-                  >
-                    Projects
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#contact"
-                    className="hover:text-foreground transition"
-                  >
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          {/* NAVIGATION */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-sm">Navigation</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                <Link href="#home" className="hover:text-foreground">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="#about" className="hover:text-foreground">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="#projects" className="hover:text-foreground">
+                  Projects
+                </Link>
+              </li>
+              <li>
+                <Link href="#contact" className="hover:text-foreground">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-            <div className="space-y-3">
-              <h4 className="font-medium">Projects</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link href="#" className="hover:text-foreground transition">
-                    NexaMart
-                  </Link>
-                </li>
-                <li className="opacity-60">More coming soon</li>
-              </ul>
-            </div>
+          {/* FEATURED PROJECT */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-sm">Featured Work</h4>
 
-            <div className="space-y-3">
-              <h4 className="font-medium">Contact</h4>
-              <ul className="space-y-2 text-muted-foreground">
+            {flagship ? (
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="font-medium text-foreground">{flagship.name}</li>
+                <li>{flagship.summary}</li>
+                {flagship.liveUrl && (
+                  <li>
+                    <Link
+                      href={
+                        flagship.liveUrl.startsWith("http")
+                          ? flagship.liveUrl
+                          : `https://${flagship.liveUrl}`
+                      }
+                      target="_blank"
+                      className="text-blue-500 hover:underline"
+                    >
+                      View project →
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Case studies coming soon.
+              </p>
+            )}
+          </div>
+
+          {/* CONTACT */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-sm">Contact</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              {contact?.email && (
                 <li>
                   <a
-                    href="mailto:nkumichael1@gmail.com"
-                    className="hover:text-foreground transition"
+                    href={`mailto:${contact.email}`}
+                    className="hover:text-foreground"
                   >
-                    Email Me
+                    {contact.email}
                   </a>
                 </li>
+              )}
+
+              {contact?.location && <li>{contact.location}</li>}
+
+              {contact?.linkedin && (
                 <li>
                   <a
-                    href="https://linkedin.com"
+                    href={contact.linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-foreground transition"
+                    className="hover:text-foreground"
                   >
                     LinkedIn
                   </a>
                 </li>
+              )}
+
+              {contact?.github && (
                 <li>
                   <a
-                    href="https://github.com/michaelnku"
+                    href={contact.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-foreground transition"
+                    className="hover:text-foreground"
                   >
                     GitHub
                   </a>
                 </li>
-              </ul>
-            </div>
+              )}
+            </ul>
           </div>
         </div>
 
         {/* BOTTOM */}
-        <div className="mt-12 flex flex-col sm:flex-row justify-between items-center gap-4 border-t pt-6 text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-t pt-6 text-xs text-muted-foreground">
           <span>
-            © {new Date().getFullYear()} Michael Nku. All rights reserved.
+            © {new Date().getFullYear()} {about?.fullName}. All rights reserved.
           </span>
-          <span className="text-blue-500">
-            Built with Next.js & Tailwind CSS
-          </span>
+
+          <span>Built with Next.js · TypeScript · Tailwind CSS</span>
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

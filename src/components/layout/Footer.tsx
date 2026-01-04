@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getPublicAbout } from "@/components/helper/getPublicAbout";
 import { getPublicContact } from "@/components/helper/getPublicContact";
 import { getPublicProjects } from "@/components/helper/getPublicProjects";
+import { getYearRange } from "@/lib/yearRange";
 
 export default async function Footer() {
   const [about, contact, projects] = await Promise.all([
@@ -141,7 +142,7 @@ export default async function Footer() {
         {/* BOTTOM */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-t pt-6 text-xs text-muted-foreground">
           <span>
-            © {new Date().getFullYear()} {about?.fullName}. All rights reserved.
+            © {getYearRange(2025)} {about?.fullName}. All rights reserved.
           </span>
 
           <span>Built with Next.js · TypeScript · Tailwind CSS</span>

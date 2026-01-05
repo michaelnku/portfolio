@@ -1,7 +1,109 @@
-import React from "react";
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle, XCircle } from "lucide-react";
+import { CurrentUser } from "@/lib/currentUser";
 
-const page = () => {
-  return <div>page</div>;
-};
+export default async function AccountPage() {
+  const user = await CurrentUser();
+  if (!user) return null;
 
-export default page;
+  const [about, contact, projects] = await Promise.all([
+    prisma.about.findUnique({ where: { createdById: user.id } }),
+    prisma.contact.findUnique({ where: { createdById: user.id } }),
+    prisma.project.findMany({
+      where: { createdById: user.id, published: true },
+      select: { id: true },
+    }),
+  ]);
+
+  const readiness = [
+    { label: "About profile completed", done: !!about },
+    { label: "Resume uploaded", done: !!about?.resume },
+    { label: "Contact information added", done: !!contact },
+    { label: "Published project", done: projects.length > 0 },
+  ];
+
+  return (
+    <div className="space-y-8 max-w-5xl">
+      {/* HEADER */}
+      <header>
+        <h1 className="text-2xl font-semibold">Account Overview</h1>
+        <p className="text-muted-foreground">
+          Manage your portfolio profile and account settings
+        </p>
+      </header>
+
+      {/* PROFILE SNAPSHOT */}
+      <Card>
+        <CardContent className="pt-6 space-y-2">
+          <h2 className="font-medium">Profile</h2>
+
+          <p className="text-sm">
+            <span className="text-muted-foreground">Name:</span>{" "}
+            {about?.fullName ?? "—"}
+          </p>
+
+          <p className="text-sm">
+            <span className="text-muted-foreground">Headline:</span>{" "}
+            {about?.headline ?? "—"}
+          </p>
+
+          <p className="text-sm">
+            <span className="text-muted-foreground">Email:</span> {user.email}
+          </p>
+
+          <p className="text-sm">
+            <span className="text-muted-foreground">Role:</span> {user.role}
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* QUICK ACTIONS */}
+      <Card>
+        <CardContent className="pt-6 space-y-4">
+          <h2 className="font-medium">Quick Actions</h2>
+
+          <div className="flex flex-wrap gap-3">
+            <Button asChild variant="outline">
+              <Link href="/dashboard/about">Edit About</Link>
+            </Button>
+
+            <Button asChild variant="outline">
+              <Link href="/dashboard/contact">Edit Contact</Link>
+            </Button>
+
+            <Button asChild variant="outline">
+              <Link href="/dashboard/projects">Manage Projects</Link>
+            </Button>
+
+            <Button asChild>
+              <Link href="/dashboard/analytics">View Analytics</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* READINESS */}
+      <Card>
+        <CardContent className="pt-6 space-y-4">
+          <h2 className="font-medium">Portfolio Readiness</h2>
+
+          <ul className="space-y-2">
+            {readiness.map((item) => (
+              <li key={item.label} className="flex items-center gap-2 text-sm">
+                {item.done ? (
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                ) : (
+                  <XCircle className="h-4 w-4 text-muted-foreground" />
+                )}
+                {item.label}
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

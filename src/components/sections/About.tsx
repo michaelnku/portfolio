@@ -39,7 +39,13 @@ export default function AboutSection({ about, resumeUrl }: Props) {
           </p>
 
           <div className="pt-2">
-            {resumeUrl && <ResumeButton resumeUrl={resumeUrl} />}
+            {resumeUrl && (
+              <ResumeButton
+                resumeUrl={resumeUrl}
+                fullName={about.fullName}
+                resumeName={about.fullName}
+              />
+            )}
           </div>
         </div>
       </header>

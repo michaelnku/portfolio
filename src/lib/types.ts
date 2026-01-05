@@ -44,6 +44,7 @@ export type ProjectUI = ProjectDB;
 export type UploadedFile = {
   url: string;
   key: string;
+  name?: string;
 };
 
 export type AboutDB = {
@@ -101,4 +102,11 @@ export type MessageUI = {
   formattedDate: string;
   read: boolean;
   createdAt: Date;
+};
+
+export type AnalyticsUI = {
+  date: Date;
+  totalVisitors: number;
+  resumeDownloads: number;
+  contactSubmits: number;
 };

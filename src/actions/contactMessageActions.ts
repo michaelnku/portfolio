@@ -6,6 +6,12 @@ import {
   contactMessageSchema,
 } from "@/lib/zodValidation";
 
+function today() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 export async function sendContactMessage(values: ContactMessageSchemaType) {
   const parsed = contactMessageSchema.safeParse(values);
 
@@ -28,8 +34,18 @@ export async function sendContactMessage(values: ContactMessageSchemaType) {
       },
     });
 
-    // (optional later)
-    // await incrementContactAnalytics();
+    const date = today();
+
+    await prisma.portfolioAnalytics.upsert({
+      where: { date },
+      update: {
+        contactSubmits: { increment: 1 },
+      },
+      create: {
+        date,
+        contactSubmits: 1,
+      },
+    });
 
     return { success: true };
   } catch (error) {

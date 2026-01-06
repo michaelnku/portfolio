@@ -53,7 +53,7 @@ export default function LoginForm() {
 
   return (
     <main className="flex items-center justify-center mx-auto max-w-5xl py-12 dark:bg-neutral-950 ">
-      <div className="w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl shadow-lg p-8 space-y-7">
+      <div className="w-full max-w-md bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl shadow-lg p-8 space-y-7">
         {/* Error Message */}
         {error && (
           <Alert variant="destructive" className="text-sm rounded-lg">
@@ -152,7 +152,7 @@ export default function LoginForm() {
             <Button
               type="submit"
               disabled={isPending}
-              variant={"secondary"}
+              variant={"default"}
               className="w-full h-11 rounded-lg font-semibold text-white shadow-md transition disabled:opacity-70"
             >
               {isPending ? (

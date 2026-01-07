@@ -2,14 +2,13 @@
 
 import Image from "next/image";
 import ResumeButton from "@/components/home/ResumeButton";
-import { AboutUI, ProjectUI } from "@/lib/types";
+import { AboutUI } from "@/lib/types";
 import { motion, easeOut, type Variants } from "framer-motion";
 import { HighlightKeywords } from "../ui/HighlightKeywords";
 
 type Props = {
   about: AboutUI;
   resumeUrl?: string;
-  project: ProjectUI[];
 };
 
 const containerVariants: Variants = {
@@ -36,7 +35,7 @@ const sectionVariants: Variants = {
   },
 };
 
-export default function AboutSection({ about, resumeUrl, project }: Props) {
+export default function AboutSection({ about, resumeUrl }: Props) {
   const highlightKeywords = [
     {
       text: about.fullName,

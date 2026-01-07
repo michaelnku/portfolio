@@ -27,11 +27,7 @@ const HomeContent = async () => {
 
       <section id="about" className="section-spacing">
         <Reveal delay={0.1}>
-          <AboutSection
-            about={about}
-            resumeUrl={about?.resume?.url}
-            project={project}
-          />
+          <AboutSection about={about} resumeUrl={about?.resume?.url} />
         </Reveal>
       </section>
 

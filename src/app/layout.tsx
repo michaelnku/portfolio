@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nku Michael John",
+  title: "Michael Nku",
   description: "My portfolio",
 };
 

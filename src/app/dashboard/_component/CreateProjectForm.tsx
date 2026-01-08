@@ -93,53 +93,21 @@ export default function CreateProjectForm() {
     });
   };
 
-  // const deleteImage = async (key: string,index:number) => {
-  //   if (deletingKeys.has(key)) return;
+  const deleteImage = async (key: string, index: number) => {
+    if (deletingKeys.has(key)) return;
 
-  //   setDeletingKeys((prev) => new Set(prev).add(key));
-
-  //   try {
-  //     await deleteFileAction(key);
-
-  //     setValue(
-  //       "images",
-  //       getValues("images").filter((img) => img.key !== key),
-  //       { shouldValidate: true }
-  //     );
-
-  //     toast.success("Image deleted");
-  //   } catch {
-  //     toast.error("Failed to delete image");
-  //   } finally {
-  //     setDeletingKeys((prev) => {
-  //       const next = new Set(prev);
-  //       next.delete(key);
-  //       return next;
-  //     });
-  //   }
-  // };
-
-  const deleteImage = async (index: number) => {
-    const images = getValues("images");
-    const image = images[index];
-
-    if (!image || deletingKeys.has(image.key)) return;
-
-    setDeletingKeys((prev) => new Set(prev).add(image.key));
+    setDeletingKeys((prev) => new Set(prev).add(key));
 
     try {
-      // 1️⃣ delete from UploadThing
-      await deleteFileAction(image.key);
+      await deleteFileAction(key);
 
-      // 2️⃣ remove from form
+      const images = getValues("images");
       const remaining = images.filter((_, i) => i !== index);
 
-      // 3️⃣ ensure at least one cover image
       if (!remaining.some((img) => img.isCover) && remaining.length > 0) {
         remaining[0].isCover = true;
       }
 
-      // 4️⃣ reindex order
       const normalized = remaining.map((img, i) => ({
         ...img,
         order: i,
@@ -153,7 +121,7 @@ export default function CreateProjectForm() {
     } finally {
       setDeletingKeys((prev) => {
         const next = new Set(prev);
-        next.delete(image.key);
+        next.delete(key);
         return next;
       });
     }
@@ -396,7 +364,7 @@ Permission-based access
                     variant="destructive"
                     size="sm"
                     disabled={deletingKeys.has(img.key)}
-                    onClick={() => deleteImage(index)}
+                    onClick={() => deleteImage(img.key, index)}
                   >
                     {deletingKeys.has(img.key) ? "Deleting…" : "Remove"}
                   </Button>

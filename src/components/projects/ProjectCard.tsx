@@ -4,6 +4,7 @@ import { ProjectUI } from "@/lib/types";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { easeOut, motion } from "framer-motion";
+import ProjectScreenshots from "./ProjectScreenshots";
 
 type Props = {
   project: ProjectUI;
@@ -52,6 +53,11 @@ const ProjectCard = ({ project }: Props) => {
           Role: <span className="font-medium">{project.role}</span>
         </p>
       </header>
+
+      {/* SCREENSHOTS */}
+      {project.images?.length > 0 && (
+        <ProjectScreenshots images={project.images} />
+      )}
 
       {/* OVERVIEW */}
       <section className="space-y-2">

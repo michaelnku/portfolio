@@ -75,6 +75,18 @@ export default function UpdateProjectForm({ project }: Props) {
     name: "images",
   });
 
+  const onSubmit = (values: UpdateProjectSchemaType) => {
+    startTransition(async () => {
+      const res = await updateProject(project.id, values);
+      if (res?.error) {
+        toast.error(res.error);
+        return;
+      }
+      toast.success("Project updated");
+      router.push("/dashboard/projects");
+    });
+  };
+
   const deleteImage = async (key: string, index: number) => {
     if (deletingKeys.has(key)) return;
 
@@ -107,17 +119,7 @@ export default function UpdateProjectForm({ project }: Props) {
     }
   };
 
-  const onSubmit = (values: UpdateProjectSchemaType) => {
-    startTransition(async () => {
-      const res = await updateProject(project.id, values);
-      if (res?.error) {
-        toast.error(res.error);
-        return;
-      }
-      toast.success("Project updated");
-      router.push("/dashboard/projects");
-    });
-  };
+  const watchedImages = form.watch("images");
 
   return (
     <main className="space-y-12 max-w-xl mx-auto">
@@ -241,12 +243,28 @@ export default function UpdateProjectForm({ project }: Props) {
                     shouldValidate: true,
                   });
                 }}
+                className="ut-button:bg-[var(--brand-blue)] ut-button:px-8 ut-button:text-white ut-button:rounded-lg"
               />
             )}
 
             {imageFields.map((img, i) => (
               <div key={img.key} className="flex gap-4 border p-3">
-                <Image src={img.url} width={120} height={80} alt="" />
+                {watchedImages?.map((img) => {
+                  return (
+                    <div
+                      key={img.key}
+                      className="relative w-40 h-40 rounded-lg overflow-hidden border"
+                    >
+                      <Image
+                        src={img.url}
+                        alt={img.alt || "Project image"}
+                        width={120}
+                        height={80}
+                        className="rounded object-cover transition"
+                      />
+                    </div>
+                  );
+                })}
                 <div className="flex-1 space-y-2">
                   <FormField
                     control={control}

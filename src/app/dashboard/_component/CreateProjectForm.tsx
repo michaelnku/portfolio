@@ -69,12 +69,7 @@ export default function CreateProjectForm() {
     name: "techStack",
   });
 
-  const {
-    fields: imageFields,
-    append: addImage,
-    remove: removeImage,
-    update: updateImage,
-  } = useFieldArray({
+  const { fields: imageFields, update: updateImage } = useFieldArray({
     control: control,
     name: "images",
   });
@@ -316,7 +311,6 @@ Permission-based access
                           height={80}
                           className="rounded object-cover transition"
                         />
-                        ;
                       </div>
                     );
                   })}

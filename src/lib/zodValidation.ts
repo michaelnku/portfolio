@@ -93,7 +93,7 @@ export const techStackInputSchema = z.object({
 });
 
 //create projects
-export const productImageSchema = z.object({
+export const projectImageSchema = z.object({
   url: z.string().url(),
   key: z.string(),
   isCover: z.boolean(),
@@ -110,7 +110,7 @@ export const createProjectSchema = z.object({
   techStack: z.array(techStackInputSchema).min(1),
 
   images: z
-    .array(productImageSchema)
+    .array(projectImageSchema)
     .min(1)
     .refine(
       (imgs) => imgs.filter((i) => i.isCover).length === 1,

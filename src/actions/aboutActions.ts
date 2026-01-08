@@ -18,6 +18,33 @@ export const deleteFileAction = async (keyToDelete: string) => {
   } catch (error) {}
 };
 
+// delete image from DB + UploadThing
+export const deleteProductImageAction = async (imageId: string) => {
+  const user = await CurrentUser();
+  if (!user) return { error: "Unauthorized" };
+
+  try {
+    const image = await prisma.projectImage.findUnique({
+      where: { id: imageId },
+    });
+
+    if (!image) return { error: "Image not found" };
+
+    // key comes directly from DB — safest and always correct
+    await utapi.deleteFiles([image.key]);
+
+    // 🔥 delete record from DB
+    await prisma.projectImage.delete({
+      where: { id: imageId },
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { error: "Could not delete image" };
+  }
+};
+
 export async function saveAbout(values: AboutSchemaType) {
   const user = await CurrentUser();
   if (!user || user.role !== "ADMIN") return { error: "Unauthorized" };

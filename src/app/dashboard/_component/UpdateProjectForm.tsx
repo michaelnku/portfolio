@@ -31,7 +31,7 @@ type ProjectFormProps = {
   project: ProjectUI;
 };
 
-export default function ProjectForm({ project }: ProjectFormProps) {
+export default function UpdateProjectForm({ project }: ProjectFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

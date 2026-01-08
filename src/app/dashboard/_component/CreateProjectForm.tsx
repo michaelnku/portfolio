@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -26,9 +26,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 
+import { UploadButton } from "@/utils/uploadthing";
+import Image from "next/image";
+import { deleteFileAction } from "@/actions/aboutActions";
+
 export default function CreateProjectForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+
+  const [uploading, setUploading] = useState(false);
+
+  const [deletingKeys, setDeletingKeys] = useState<Set<string>>(new Set());
 
   const form = useForm<createProjectSchemaType>({
     resolver: zodResolver(createProjectSchema),
@@ -40,6 +48,8 @@ export default function CreateProjectForm() {
       techStack: [],
       keyFeatures: "",
 
+      images: [],
+
       liveUrl: "",
       repoUrl: "",
       isFlagship: false,
@@ -48,13 +58,25 @@ export default function CreateProjectForm() {
     },
   });
 
+  const { control, handleSubmit, setValue, getValues } = form;
+
   const {
     fields: techFields,
     append: addTech,
     remove: removeTech,
   } = useFieldArray({
-    control: form.control,
+    control: control,
     name: "techStack",
+  });
+
+  const {
+    fields: imageFields,
+    append: addImage,
+    remove: removeImage,
+    update: updateImage,
+  } = useFieldArray({
+    control: control,
+    name: "images",
   });
 
   const onSubmit = (values: createProjectSchemaType) => {
@@ -71,17 +93,85 @@ export default function CreateProjectForm() {
     });
   };
 
+  // const deleteImage = async (key: string,index:number) => {
+  //   if (deletingKeys.has(key)) return;
+
+  //   setDeletingKeys((prev) => new Set(prev).add(key));
+
+  //   try {
+  //     await deleteFileAction(key);
+
+  //     setValue(
+  //       "images",
+  //       getValues("images").filter((img) => img.key !== key),
+  //       { shouldValidate: true }
+  //     );
+
+  //     toast.success("Image deleted");
+  //   } catch {
+  //     toast.error("Failed to delete image");
+  //   } finally {
+  //     setDeletingKeys((prev) => {
+  //       const next = new Set(prev);
+  //       next.delete(key);
+  //       return next;
+  //     });
+  //   }
+  // };
+
+  const deleteImage = async (index: number) => {
+    const images = getValues("images");
+    const image = images[index];
+
+    if (!image || deletingKeys.has(image.key)) return;
+
+    setDeletingKeys((prev) => new Set(prev).add(image.key));
+
+    try {
+      // 1️⃣ delete from UploadThing
+      await deleteFileAction(image.key);
+
+      // 2️⃣ remove from form
+      const remaining = images.filter((_, i) => i !== index);
+
+      // 3️⃣ ensure at least one cover image
+      if (!remaining.some((img) => img.isCover) && remaining.length > 0) {
+        remaining[0].isCover = true;
+      }
+
+      // 4️⃣ reindex order
+      const normalized = remaining.map((img, i) => ({
+        ...img,
+        order: i,
+      }));
+
+      setValue("images", normalized, { shouldValidate: true });
+
+      toast.success("Image deleted");
+    } catch (err) {
+      toast.error("Failed to delete image");
+    } finally {
+      setDeletingKeys((prev) => {
+        const next = new Set(prev);
+        next.delete(image.key);
+        return next;
+      });
+    }
+  };
+
+  const watchedImages = form.watch("images");
+
   return (
     <main className="space-y-12 max-w-xl mx-auto">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
           className="space-y-8 shadow rounded p-6"
         >
           <h1 className="font-medium text-lg">Add Your Project</h1>
           {/* PROJECT NAME */}
           <FormField
-            control={form.control}
+            control={control}
             name="name"
             render={({ field }) => (
               <FormItem>
@@ -95,7 +185,7 @@ export default function CreateProjectForm() {
           />
 
           <FormField
-            control={form.control}
+            control={control}
             name="role"
             render={({ field }) => (
               <FormItem>
@@ -110,7 +200,7 @@ export default function CreateProjectForm() {
 
           {/* DESCRIPTION */}
           <FormField
-            control={form.control}
+            control={control}
             name="summary"
             render={({ field }) => (
               <FormItem>
@@ -124,7 +214,7 @@ export default function CreateProjectForm() {
           />
 
           <FormField
-            control={form.control}
+            control={control}
             name="keyFeatures"
             render={({ field }) => (
               <FormItem>
@@ -155,7 +245,7 @@ Permission-based access
                   className="grid grid-cols-2 gap-4 items-center"
                 >
                   <FormField
-                    control={form.control}
+                    control={control}
                     name={`techStack.${index}.key`}
                     render={({ field }) => (
                       <FormItem>
@@ -166,7 +256,7 @@ Permission-based access
                   />
 
                   <FormField
-                    control={form.control}
+                    control={control}
                     name={`techStack.${index}.value`}
                     render={({ field }) => (
                       <FormItem>
@@ -198,9 +288,128 @@ Permission-based access
             <FormMessage />
           </FormItem>
 
+          {/* PROJECT IMAGES */}
+          <FormItem>
+            <FormLabel>Project Images (max 5)</FormLabel>
+
+            <div className="space-y-4">
+              {/* UPLOAD */}
+              {imageFields.length < 5 ? (
+                <UploadButton
+                  endpoint="projectImage"
+                  onClientUploadComplete={(res) => {
+                    const existing = getValues("images") ?? [];
+
+                    if (existing.length + res.length > 5) {
+                      toast.error("You can upload a maximum of 5 images");
+                      return;
+                    }
+
+                    const uploaded = res.map((f, idx) => ({
+                      url: f.url,
+                      key: f.key,
+                      alt: "",
+                      order: existing.length + idx,
+                      isCover: existing.length === 0 && idx === 0,
+                    }));
+
+                    setValue("images", [...existing, ...uploaded], {
+                      shouldValidate: true,
+                    });
+
+                    toast.success("Images uploaded");
+                  }}
+                  className="ut-button:bg-[var(--brand-blue)] ut-button:px-8 ut-button:text-white ut-button:rounded-lg"
+                />
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Maximum of 5 images reached
+                </p>
+              )}
+
+              {/* IMAGE LIST */}
+              {imageFields.map((img, index) => (
+                <div
+                  key={img.id}
+                  className="flex gap-4 items-start border rounded-lg p-3"
+                >
+                  {/* PREVIEW */}
+
+                  {watchedImages?.map((img) => {
+                    return (
+                      <div
+                        key={img.key}
+                        className="relative w-40 h-40 rounded-lg overflow-hidden border"
+                      >
+                        <Image
+                          src={img.url}
+                          alt={img.alt || "Project image"}
+                          width={120}
+                          height={80}
+                          className="rounded object-cover transition"
+                        />
+                        ;
+                      </div>
+                    );
+                  })}
+
+                  {/* META */}
+                  <div className="flex-1 space-y-2">
+                    <FormField
+                      control={control}
+                      name={`images.${index}.alt`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs">Alt text</FormLabel>
+                          <Input {...field} placeholder="image description" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={control}
+                      name={`images.${index}.isCover`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-2 space-y-0">
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              // ensure only ONE cover image
+                              imageFields.forEach((_, i) => {
+                                updateImage(i, {
+                                  ...imageFields[i],
+                                  isCover:
+                                    i === index ? Boolean(checked) : false,
+                                });
+                              });
+                            }}
+                          />
+                          <FormLabel className="text-sm">Cover image</FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* REMOVE */}
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    disabled={deletingKeys.has(img.key)}
+                    onClick={() => deleteImage(index)}
+                  >
+                    {deletingKeys.has(img.key) ? "Deleting…" : "Remove"}
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <FormMessage />
+          </FormItem>
+
           {/* LIVE URL */}
           <FormField
-            control={form.control}
+            control={control}
             name="liveUrl"
             render={({ field }) => (
               <FormItem>
@@ -215,7 +424,7 @@ Permission-based access
 
           {/* REPO URL */}
           <FormField
-            control={form.control}
+            control={control}
             name="repoUrl"
             render={({ field }) => (
               <FormItem>
@@ -229,7 +438,7 @@ Permission-based access
           />
 
           <FormField
-            control={form.control}
+            control={control}
             name="isFlagship"
             render={({ field }) => (
               <FormItem className="flex items-center gap-3 space-y-0">
@@ -246,7 +455,7 @@ Permission-based access
 
           {/* FEATURED */}
           <FormField
-            control={form.control}
+            control={control}
             name="featured"
             render={({ field }) => (
               <FormItem className="flex items-center gap-3 space-y-0">
@@ -263,7 +472,7 @@ Permission-based access
 
           {/* PUBLISHED */}
           <FormField
-            control={form.control}
+            control={control}
             name="published"
             render={({ field }) => (
               <FormItem className="flex items-center gap-3 space-y-0">

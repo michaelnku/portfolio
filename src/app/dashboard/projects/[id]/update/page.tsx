@@ -1,4 +1,4 @@
-import ProjectForm from "@/app/dashboard/_component/ProjectForm";
+import UpdateProjectForm from "@/app/dashboard/_component/UpdateProjectForm";
 import { getProjectForEdit } from "@/components/helper/data";
 import { redirect } from "next/navigation";
 
@@ -16,7 +16,7 @@ export default async function EditProjectPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <h1 className="text-xl font-semibold">Update Project</h1>
-      <ProjectForm project={project} />
+      <UpdateProjectForm project={project} />
     </div>
   );
 }

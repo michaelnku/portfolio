@@ -34,8 +34,6 @@ export default function CreateProjectForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const [uploading, setUploading] = useState(false);
-
   const [deletingKeys, setDeletingKeys] = useState<Set<string>>(new Set());
 
   const form = useForm<createProjectSchemaType>({

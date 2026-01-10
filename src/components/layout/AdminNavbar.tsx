@@ -16,64 +16,27 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  Menu,
-  LayoutDashboard,
-  FolderKanban,
-  Mail,
-  BarChart3,
-  Settings,
-  LogOut,
-  User,
-  User2,
-  Phone,
-  User2Icon,
-} from "lucide-react";
-import { UserDTO } from "@/lib/types";
+import { Menu, Settings, LogOut, User2Icon } from "lucide-react";
+import { AboutUI, UserDTO } from "@/lib/types";
 import { useLogout } from "@/hooks/useLogout";
 import { useGetCurrentUserQuery } from "@/stores/useGetCurrentUserQuery";
 import { Button } from "@/components/ui/button";
+import { ADMIN_NAV } from "@/lib/admin-nav";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-const mobileLinks = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "About",
-    href: "/dashboard/about",
-    icon: User2,
-  },
-  {
-    label: "Contact",
-    href: "/dashboard/contact",
-    icon: Phone,
-  },
-  {
-    label: "Projects",
-    href: "/dashboard/projects",
-    icon: FolderKanban,
-  },
-  {
-    label: "Messages",
-    href: "/dashboard/messages",
-    icon: Mail,
-  },
-  {
-    label: "Analytics",
-    href: "/dashboard/analytics",
-    icon: BarChart3,
-  },
-];
-
-export default function AdminNavbar({
-  initialUser,
-}: {
+type Props = {
   initialUser: UserDTO | null;
-}) {
+  about: AboutUI | null;
+};
+
+export default function AdminNavbar({ initialUser, about }: Props) {
   const logout = useLogout();
   const { data: user } = useGetCurrentUserQuery(initialUser);
+
+  const avatar = user?.profileImage?.url ?? user?.image ?? null;
+
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur">
@@ -94,19 +57,21 @@ export default function AdminNavbar({
               </SheetHeader>
 
               <nav className="mt-6 flex flex-col gap-2">
-                {mobileLinks.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition"
-                    >
-                      <Icon className="h-4 w-4" />
-                      {item.label}
-                    </Link>
-                  );
-                })}
+                {ADMIN_NAV.map(({ href, label, icon: Icon }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm",
+                      pathname === href
+                        ? "bg-muted text-foreground"
+                        : "text-muted-foreground hover:bg-muted"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </Link>
+                ))}
               </nav>
             </SheetContent>
           </Sheet>
@@ -121,13 +86,13 @@ export default function AdminNavbar({
               className="rounded-md object-contain"
             />
             <span className="font-semibold text-lg tracking-tight">
-              Michael Nku
+              {about?.fullName ?? "Admin"}
             </span>
           </Link>
 
           {/* ADMIN BADGE */}
           <span className="hidden sm:inline-flex rounded-full bg-blue-500/10 px-3 py-1 text-xs text-blue-600">
-            Admin
+            {user?.role}
           </span>
         </div>
 
@@ -135,24 +100,22 @@ export default function AdminNavbar({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2 rounded-full px-2 py-1 hover:bg-muted transition">
-              {user?.image ? (
+              {avatar ? (
                 <Image
-                  src={user.image}
-                  alt="User"
+                  src={avatar}
+                  alt="User avatar"
                   width={32}
                   height={32}
                   className="rounded-full object-cover"
                 />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                  <div className="uppercase text-xl font-semibold">
-                    {user?.name?.[0] ?? user?.email[0]}
-                  </div>
+                <div className="w-8 h-8 uppercase rounded-full bg-muted flex items-center justify-center text-sm font-semibold">
+                  {user?.name?.[0] ?? user?.email[0]}
                 </div>
               )}
 
               <span className="hidden md:block text-sm font-medium">
-                {user?.name?.split(" ")[0] || "Admin"}
+                {user?.name?.split(" ")[0] || user?.username || "Admin"}
               </span>
             </button>
           </DropdownMenuTrigger>

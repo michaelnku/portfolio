@@ -1,3 +1,4 @@
+import { getAdminAbout } from "@/components/helper/getAdminAbout";
 import AdminNavbar from "@/components/layout/AdminNavbar";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import { CurrentUser } from "@/lib/currentUser";
@@ -14,10 +15,12 @@ export default async function DashboardLayout({
     redirect("/");
   }
 
+  const about = await getAdminAbout();
+
   return (
     <div className="min-h-screen">
       {/* TOP NAV */}
-      <AdminNavbar initialUser={user} />
+      <AdminNavbar initialUser={user} about={about} />
 
       <div className="flex">
         {/* SIDEBAR */}

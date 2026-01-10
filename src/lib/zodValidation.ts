@@ -10,8 +10,6 @@ export const userSchema = z
       message: "Username must be at least 2 characters.",
     }),
 
-    profileImage: z.string().optional(),
-
     role: z.enum(["USER", "ADMIN"]),
 
     email: z.string().email({ message: "Invalid email address." }),
@@ -51,7 +49,13 @@ export const updateUserSchema = z
       .min(2, { message: "name must be at least 2 characters." })
       .optional(),
 
-    profileImage: z.string().optional(),
+    profileImage: z
+      .object({
+        url: z.string().url(),
+        key: z.string(),
+      })
+      .optional()
+      .nullable(),
 
     username: z
       .string({ message: "Username must be a string." })

@@ -12,21 +12,6 @@ const handleAuth = async () => {
 };
 
 export const ourFileRouter = {
-  avatarImage: f({
-    image: {
-      maxFileSize: "4MB",
-      maxFileCount: 1,
-    },
-  })
-    .middleware(() => handleAuth())
-
-    .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for userId:", metadata.user.id);
-
-      console.log("file url", file.ufsUrl);
-
-      return { uploadedBy: metadata.user.id };
-    }),
   profileImage: f({
     image: {
       maxFileSize: "4MB",

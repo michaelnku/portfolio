@@ -16,7 +16,7 @@ export default async function ProfilePage() {
   const avatar = user?.profileImage ?? user?.image ?? null;
 
   return (
-    <div className="max-w-5xl space-y-10">
+    <div className="max-w-5xl mx-auto space-y-10">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold">Profile</h1>
         <p className="text-sm text-muted-foreground">

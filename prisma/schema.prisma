@@ -18,7 +18,7 @@ model User {
   name          String?
   username      String?
   password      String?
-  profileImage  String?
+  profileImage  Json?
   email         String    @unique
   emailVerified DateTime?
   image         String?

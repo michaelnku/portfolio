@@ -24,6 +24,13 @@ import Image from "next/image";
 import { deleteFileAction } from "@/actions/aboutActions";
 import { Camera, Loader2, Trash } from "lucide-react";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 type Props = {
   user: UserDTO;
 };
@@ -57,28 +64,34 @@ export default function ProfileForm({ user }: Props) {
     });
   };
 
-  const deleteSingleFile = async (field: "profileImage") => {
-    const file = getValues(field);
-    if (!file) return;
+  const deleteProfileImage = async () => {
+    const image = getValues("profileImage");
+    if (!image?.key) return;
 
-    if (deletingKeys.has(file)) return;
+    if (deletingKeys.has(image.key)) return;
 
-    setDeletingKeys((prev) => new Set(prev).add(file));
+    setDeletingKeys((p) => new Set(p).add(image.key));
 
     try {
-      await deleteFileAction(file);
-      setValue(field, undefined);
-      toast.success("File deleted");
+      await deleteFileAction(image.key);
+      setValue("profileImage", undefined);
+      toast.success("Profile image removed");
     } catch {
-      toast.error("Failed to delete file");
+      toast.error("Failed to remove image");
     } finally {
-      setDeletingKeys((prev) => {
-        const next = new Set(prev);
-        next.delete(file);
+      setDeletingKeys((p) => {
+        const next = new Set(p);
+        next.delete(image.key);
         return next;
       });
     }
   };
+
+  const avatar =
+    form.watch("profileImage")?.url ??
+    user.profileImage?.url ??
+    user.image ??
+    null;
 
   return (
     <Card>
@@ -90,63 +103,80 @@ export default function ProfileForm({ user }: Props) {
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* profile image */}
-            <section className="border-t">
+
+            <section className="border-t pt-6">
               <div className="flex flex-col items-center gap-4">
-                {user?.profileImage || user?.image ? (
-                  <div className="mt-4 relative w-32 h-32">
+                {/* AVATAR */}
+                <div className="relative w-32 h-32">
+                  {avatar ? (
                     <Image
-                      src={user?.image || user?.profileImage || "avatar"}
+                      src={avatar}
                       alt="Profile image"
                       fill
-                      className="rounded-full object-cover"
+                      className="rounded-full object-cover border"
                     />
-                  </div>
-                ) : (
-                  "No profile image uploaded yet."
-                )}
+                  ) : (
+                    <div className="w-full h-full rounded-full border flex items-center justify-center text-sm text-muted-foreground">
+                      No photo
+                    </div>
+                  )}
 
-                {/*dropdown trigger*/}
-                <Button asChild>
-                  <button type="button">Edit</button>
-                </Button>
-              </div>
+                  {/* DROPDOWN TRIGGER */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        className="absolute bottom-1 right-1 rounded-full bg-white p-2 shadow hover:shadow-md transition"
+                      >
+                        <Camera className="h-4 w-4" />
+                      </button>
+                    </DropdownMenuTrigger>
 
-              {/*dropdown menu*/}
-              <div className="relative w-32 h-32 space-y-6">
-                <p>Profile Photo</p>
-                <div className="space-y-4">
-                  <button className="inline-flex gap-3 items-center">
-                    <Camera className=" bg-white rounded-full p-1 h-8 w-8 hover:shadow-md" />
-                    <p>Gallery</p>{" "}
-                    {/*uploading happens inside here  
-                       <UploadButton
-                endpoint="profileImage"
-                className="
-                ut-button:bg-blue-500/10
-                ut-button:text-blue-600
-                ut-button:border
-                ut-button:border-blue-500/30
-                ut-button:rounded-full
-                ut-button:px-5
-                ut-button:py-2
-                ut-button:text-sm
-                hover:ut-button:bg-blue-500/20
-              "
-                onClientUploadComplete={(res) => {
-                  const file = res[0];
-                  setValue("profileImage", { url: file.url, key: file.key });
-                  toast.success("Profile image uploaded");
-                }}
-              />
-                    */}
-                  </button>
-                  <button className="inline-flex gap-3 items-center">
-                    <Trash className=" bg-white rounded-full p-1 h-8 w-8 hover:shadow-md" />
-                    <p>Remove</p>
-                  </button>
+                    <DropdownMenuContent align="end" className="w-40">
+                      {/* GALLERY (UPLOADTHING) */}
+                      <DropdownMenuItem asChild>
+                        <div className="w-full">
+                          <UploadButton
+                            endpoint="profileImage"
+                            onClientUploadComplete={(res) => {
+                              const file = res[0];
+                              setValue("profileImage", {
+                                url: file.url,
+                                key: file.key,
+                              });
+                              toast.success("Profile image updated");
+                            }}
+                            className="
+                  ut-button:bg-transparent
+                  ut-button:text-left
+                  ut-button:w-full
+                  ut-button:justify-start
+                  ut-button:text-sm
+                  ut-button:text-foreground
+                  ut-button:px-2
+                  ut-button:py-1
+                  hover:ut-button:bg-muted
+                "
+                          />
+                        </div>
+                      </DropdownMenuItem>
+
+                      {/* REMOVE */}
+                      {form.watch("profileImage") && (
+                        <DropdownMenuItem
+                          className="text-red-600 cursor-pointer"
+                          onClick={deleteProfileImage}
+                        >
+                          <Trash className="mr-2 h-4 w-4" />
+                          Remove
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             </section>
+
             <FormField
               control={control}
               name="name"

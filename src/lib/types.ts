@@ -1,11 +1,16 @@
 import { UserRole } from "@/generated/prisma/client";
 
+export type ProfileImage = {
+  url: string;
+  key: string;
+};
+
 export type UserDTO = {
   id: string;
   email: string;
   role: UserRole;
 
-  profileImage?: string | null;
+  profileImage?: ProfileImage | null;
 
   name?: string | null;
   username?: string | null;

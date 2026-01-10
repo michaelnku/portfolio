@@ -19,6 +19,7 @@ import { AuthError } from "next-auth";
 import { ADMIN_LOGIN_REDIRECT } from "@/routes";
 import { CurrentUser } from "@/lib/currentUser";
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@/generated/prisma/client";
 
 // create user action
 export const createUser = async (values: UserSchemaType) => {
@@ -124,7 +125,7 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     data: {
       name,
       username,
-      profileImage,
+      profileImage: profileImage === null ? Prisma.JsonNull : profileImage,
     },
   });
 

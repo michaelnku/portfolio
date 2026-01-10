@@ -27,19 +27,27 @@ export default async function ProfilePage() {
       {/* PROFILE CARD */}
       <Card>
         <CardContent className="pt-6 flex flex-col md:flex-row gap-6 items-start">
-          {avatar && (
-            <Image
-              src={avatar}
-              alt={about?.fullName ?? user.name ?? "Profile image"}
-              width={120}
-              height={120}
-              className="rounded-full object-cover border"
-            />
-          )}
+          <div className="relative w-32 h-32">
+            {avatar ? (
+              <Image
+                src={avatar}
+                alt={about?.fullName ?? user?.name ?? "Profile image"}
+                width={120}
+                height={120}
+                className="rounded-full object-cover border"
+              />
+            ) : (
+              <div className="w-full h-full rounded-full border flex items-center justify-center text-sm text-muted-foreground">
+                <div className="uppercase text-xl font-semibold">
+                  {user?.name?.[0] ?? user?.email[0]}
+                </div>
+              </div>
+            )}
+          </div>
 
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold">
-              {about?.fullName ?? user.name ?? "—"}
+              {about?.fullName ?? user?.name ?? "—"}
             </h2>
             <p className="text-muted-foreground">
               {about?.headline ?? "Professional profile"}

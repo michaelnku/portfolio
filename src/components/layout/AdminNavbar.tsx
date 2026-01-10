@@ -145,7 +145,9 @@ export default function AdminNavbar({
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                  <User className="w-4 h-4 text-muted-foreground" />
+                  <div className="uppercase text-xl font-semibold">
+                    {user?.name?.[0] ?? user?.email[0]}
+                  </div>
                 </div>
               )}
 

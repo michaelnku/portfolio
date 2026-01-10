@@ -11,11 +11,14 @@ import {
   ChangePasswordSchemaType,
   changePasswordSchema,
 } from "@/lib/zodValidation";
+
 import bcrypt from "bcryptjs";
 import { getUserByEmail } from "@/components/helper/data";
 import { signIn } from "@/auth/auth";
 import { AuthError } from "next-auth";
 import { ADMIN_LOGIN_REDIRECT } from "@/routes";
+import { CurrentUser } from "@/lib/currentUser";
+import { revalidatePath } from "next/cache";
 
 // create user action
 export const createUser = async (values: registerSchemaType) => {
@@ -100,12 +103,11 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     return { error: "Invalid profile data" };
   }
 
-  const { name, username, email } = parsed.data;
+  const { name, username, profileImage } = parsed.data;
 
-  const user = await getUserByEmail(email);
+  const user = await CurrentUser();
   if (!user) return { error: "Unauthorized" };
 
-  // Ensure username is unique (excluding self)
   const existing = await prisma.user.findFirst({
     where: {
       username,
@@ -122,6 +124,7 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     data: {
       name,
       username,
+      profileImage,
     },
   });
 
@@ -131,7 +134,6 @@ export async function updateUserProfile(values: updateUserSchemaType) {
 }
 
 //password change action
-
 export async function changePassword(values: ChangePasswordSchemaType) {
   const parsed = changePasswordSchema.safeParse(values);
   if (!parsed.success) {
@@ -139,6 +141,9 @@ export async function changePassword(values: ChangePasswordSchemaType) {
   }
 
   const { currentPassword, newPassword } = parsed.data;
+
+  const user = await CurrentUser();
+  if (!user) return { error: "Unauthorized" };
 
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },

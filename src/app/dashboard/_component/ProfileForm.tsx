@@ -117,7 +117,9 @@ export default function ProfileForm({ user }: Props) {
                     />
                   ) : (
                     <div className="w-full h-full rounded-full border flex items-center justify-center text-sm text-muted-foreground">
-                      No photo
+                      <div className="uppercase text-xl font-semibold">
+                        {user.name?.[0] ?? user.email[0]}
+                      </div>
                     </div>
                   )}
 

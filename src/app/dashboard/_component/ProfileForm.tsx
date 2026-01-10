@@ -105,7 +105,6 @@ export default function ProfileForm({ user }: Props) {
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* profile image */}
-
             <section className="border-t pt-6">
               <div className="flex flex-col items-center gap-4">
                 {/* AVATAR */}
@@ -124,63 +123,59 @@ export default function ProfileForm({ user }: Props) {
                       </div>
                     </div>
                   )}
-
-                  <button
-                    type="button"
-                    className="absolute bottom-1 right-1 rounded-full bg-white p-2 shadow hover:shadow-md transition"
-                  >
-                    <Camera className="h-4 w-4" />
-                    <UploadButton
-                      endpoint="profileImage"
-                      onClientUploadComplete={async (res) => {
-                        const file = res[0];
-                        if (!file) {
-                          toast.error("Upload failed");
-                          return;
-                        }
-                        setValue(
-                          "profileImage",
-                          { url: file.url, key: file.key },
-                          {
-                            shouldDirty: true,
-                            shouldTouch: true,
-                            shouldValidate: true,
-                          }
-                        );
-
-                        await updateUserProfile({
-                          profileImage: { url: file.url, key: file.key },
-                        });
-                        toast.success("Profile image updated");
-                      }}
-                      className="
-                  ut-button:bg-transparent
-                  ut-button:text-left
-                  ut-button:w-full
-                  ut-button:justify-start
-                  ut-button:text-sm
-                  ut-button:text-foreground
-                  ut-button:px-2
-                  ut-button:py-1
-                  hover:ut-button:bg-muted
-                "
-                    />
-                  </button>
                 </div>
 
-                {avatar && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    disabled={deletingKeys.has(
-                      form.watch("profileImage")?.key ?? ""
-                    )}
-                    onClick={deleteProfileImage}
-                    className="text-red-600 text-sm"
-                  >
-                    Remove photo
-                  </Button>
-                )}
+                <span>
+                  <UploadButton
+                    endpoint="profileImage"
+                    onClientUploadComplete={async (res) => {
+                      const file = res[0];
+                      if (!file) {
+                        toast.error("Upload failed");
+                        return;
+                      }
+                      setValue(
+                        "profileImage",
+                        { url: file.url, key: file.key },
+                        {
+                          shouldDirty: true,
+                          shouldTouch: true,
+                          shouldValidate: true,
+                        }
+                      );
+
+                      await updateUserProfile({
+                        profileImage: { url: file.url, key: file.key },
+                      });
+                      toast.success("Profile image updated");
+                    }}
+                    className="
+    ut-button:bg-blue-500/10
+    ut-button:text-blue-600
+    ut-button:border
+    ut-button:border-blue-500/30
+    ut-button:rounded-full
+    ut-button:px-5
+    ut-button:py-2
+    ut-button:text-sm
+    hover:ut-button:bg-blue-500/20
+  "
+                  />
+
+                  {avatar && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={deletingKeys.has(
+                        form.watch("profileImage")?.key ?? ""
+                      )}
+                      onClick={deleteProfileImage}
+                      className="text-red-600 text-sm"
+                    >
+                      Remove photo
+                    </Button>
+                  )}
+                </span>
               </div>
             </section>
 

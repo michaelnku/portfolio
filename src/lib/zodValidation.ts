@@ -10,6 +10,8 @@ export const userSchema = z
       message: "Username must be at least 2 characters.",
     }),
 
+    profileImage: z.string().optional(),
+
     role: z.enum(["USER", "ADMIN"]),
 
     email: z.string().email({ message: "Invalid email address." }),

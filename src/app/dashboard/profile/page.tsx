@@ -1,43 +1,36 @@
-import { prisma } from "@/lib/prisma";
 import { CurrentUser } from "@/lib/currentUser";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  MapPin,
-  Mail,
-  Github,
-  Linkedin,
-  Twitter,
-  Globe,
-  Briefcase,
-} from "lucide-react";
+import { getAdminAbout } from "@/components/helper/getAdminAbout";
+import { getAdminContact } from "@/components/helper/getAdminContact";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function ProfilePage() {
   const user = await CurrentUser();
   if (!user) return null;
 
-  const [about, contact, projects] = await Promise.all([
-    prisma.about.findUnique({
-      where: { createdById: user.id },
-    }),
-    prisma.contact.findUnique({
-      where: { createdById: user.id },
-    }),
-    prisma.project.findMany({
-      where: { createdById: user.id, published: true },
-      select: { id: true, isFlagship: true, featured: true },
-    }),
-  ]);
+  const about = await getAdminAbout();
+  const contact = await getAdminContact();
+
+  const avatar = user?.profileImage ?? user?.image ?? null;
 
   return (
     <div className="max-w-5xl space-y-10">
-      {/* ===== PROFILE HEADER ===== */}
+      <header className="space-y-2">
+        <h1 className="text-2xl font-semibold">Profile</h1>
+        <p className="text-sm text-muted-foreground">
+          Manage your personal account information and security.
+        </p>
+      </header>
+
+      {/* PROFILE CARD */}
       <Card>
         <CardContent className="pt-6 flex flex-col md:flex-row gap-6 items-start">
-          {about?.profileImage && (
+          {avatar && (
             <Image
-              src={about?.profileImage | ""}
-              alt={about.fullName}
+              src={avatar}
+              alt={about?.fullName ?? user.name ?? "Profile image"}
               width={120}
               height={120}
               className="rounded-full object-cover border"
@@ -45,10 +38,9 @@ export default async function ProfilePage() {
           )}
 
           <div className="space-y-2">
-            <h1 className="text-2xl font-semibold">
+            <h2 className="text-2xl font-semibold">
               {about?.fullName ?? user.name ?? "—"}
-            </h1>
-
+            </h2>
             <p className="text-muted-foreground">
               {about?.headline ?? "Professional profile"}
             </p>
@@ -63,7 +55,6 @@ export default async function ProfilePage() {
                   Open to work
                 </span>
               )}
-
               {contact?.openToRelocation && (
                 <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm text-blue-600">
                   Open to relocation
@@ -71,6 +62,34 @@ export default async function ProfilePage() {
               )}
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* ACCOUNT INFO */}
+      <Card>
+        <CardContent className="pt-6 space-y-2">
+          <h3 className="font-medium">Account Information</h3>
+
+          <p className="text-sm">
+            <span className="text-muted-foreground">Email:</span> {user.email}
+          </p>
+
+          <p className="text-sm">
+            <span className="text-muted-foreground">Role:</span> {user.role}
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* ACTIONS */}
+      <Card>
+        <CardContent className="pt-6 space-y-4">
+          <h3 className="font-medium">Actions</h3>
+
+          <Button asChild>
+            <Link href="/dashboard/profile/update">
+              Update Profile & Password
+            </Link>
+          </Button>
         </CardContent>
       </Card>
     </div>

@@ -1,7 +1,7 @@
 import z from "zod";
 
 //register a user
-export const registerSchema = z
+export const userSchema = z
   .object({
     name: z.string().min(2, {
       message: "Name must be at least 2 characters.",
@@ -29,7 +29,7 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
-export type registerSchemaType = z.infer<typeof registerSchema>;
+export type UserSchemaType = z.infer<typeof userSchema>;
 
 //login a user
 export const loggedInUserSchema = z.object({

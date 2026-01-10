@@ -1,6 +1,6 @@
 "use client";
 
-import { registerSchema, registerSchemaType } from "@/lib/zodValidation";
+import { userSchema, UserSchemaType } from "@/lib/zodValidation";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,8 +28,8 @@ export default function RegisterForm() {
 
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<registerSchemaType>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<UserSchemaType>({
+    resolver: zodResolver(userSchema),
     defaultValues: {
       name: "",
       username: "",
@@ -40,7 +40,7 @@ export default function RegisterForm() {
     },
   });
 
-  const handleSubmit = (values: registerSchemaType) => {
+  const handleSubmit = (values: UserSchemaType) => {
     startTransition(async () => {
       createUser(values).then((res) => {
         if (res?.error) {

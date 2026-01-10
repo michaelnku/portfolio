@@ -4,12 +4,12 @@ import { prisma } from "@/lib/prisma";
 import {
   loggedInUserSchema,
   loggedInUserSchemaType,
-  registerSchemaType,
-  registerSchema,
   updateUserSchemaType,
   updateUserSchema,
   ChangePasswordSchemaType,
   changePasswordSchema,
+  UserSchemaType,
+  userSchema,
 } from "@/lib/zodValidation";
 
 import bcrypt from "bcryptjs";
@@ -21,9 +21,9 @@ import { CurrentUser } from "@/lib/currentUser";
 import { revalidatePath } from "next/cache";
 
 // create user action
-export const createUser = async (values: registerSchemaType) => {
+export const createUser = async (values: UserSchemaType) => {
   try {
-    const validatedFields = registerSchema.safeParse(values);
+    const validatedFields = userSchema.safeParse(values);
     if (!validatedFields.success) {
       return {
         error: "Invalid user data",

@@ -34,7 +34,7 @@ export default function AdminNavbar({ initialUser, about }: Props) {
   const logout = useLogout();
   const { data: user } = useGetCurrentUserQuery(initialUser);
 
-  const avatar = user?.profileImage?.url ?? user?.image ?? null;
+  const avatar = user?.profileAvatar?.url ?? user?.image ?? null;
 
   const pathname = usePathname();
 

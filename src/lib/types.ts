@@ -10,7 +10,7 @@ export type UserDTO = {
   email: string;
   role: UserRole;
 
-  profileImage?: ProfileImage | null;
+  profileAvatar?: ProfileImage | null;
 
   name?: string | null;
   username?: string | null;

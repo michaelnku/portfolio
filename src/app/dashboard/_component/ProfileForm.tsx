@@ -62,14 +62,13 @@ export default function ProfileForm({ userData }: Props) {
 
   const onSubmit = (values: updateUserSchemaType) => {
     startTransition(async () => {
-      const res = await updateUserProfile(values);
-
-      if (res?.error) {
-        toast.error(res.error);
-        return;
-      }
-
-      toast.success("Profile updated");
+      await updateUserProfile(values).then((res) => {
+        if (res?.error) {
+          toast.error(res.error);
+          return;
+        }
+        toast.success("Profile updated");
+      });
     });
   };
 
@@ -99,8 +98,9 @@ export default function ProfileForm({ userData }: Props) {
   const avatar =
     form.watch("profileAvatar")?.url ??
     userData.profileAvatar?.url ??
-    userData.image ??
-    null;
+    userData.image;
+
+  const watchedProfileAvatar = form.watch("profileAvatar");
 
   return (
     <Card>

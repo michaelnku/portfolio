@@ -103,7 +103,7 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     return { error: "Invalid profile data" };
   }
 
-  const { name, username, profileImage } = parsed.data;
+  const { name, username, profileAvatar } = parsed.data;
 
   const user = await CurrentUser();
   if (!user) return { error: "Unauthorized" };
@@ -124,7 +124,7 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     data: {
       name,
       username,
-      profileImage,
+      profileAvatar,
     },
   });
 

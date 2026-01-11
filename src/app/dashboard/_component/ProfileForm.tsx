@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -24,24 +24,41 @@ import Image from "next/image";
 import { deleteFileAction } from "@/actions/aboutActions";
 
 type Props = {
-  user: UserDTO;
+  userData: UserDTO;
 };
 
-export default function ProfileForm({ user }: Props) {
+export default function ProfileForm({ userData }: Props) {
   const [isPending, startTransition] = useTransition();
 
   const [deletingKeys, setDeletingKeys] = useState<Set<string>>(new Set());
 
+  const [hydrated, setHydrated] = useState(false);
+
   const form = useForm<updateUserSchemaType>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
-      name: user.name ?? "",
-      username: user.username ?? "",
-      profileImage: user.profileImage ?? undefined,
+      name: userData.name ?? "",
+      username: userData.username ?? "",
+      profileAvatar: userData.profileAvatar ?? undefined,
     },
   });
 
   const { control, handleSubmit, setValue, getValues, reset } = form;
+
+  useEffect(() => {
+    if (!userData) {
+      setHydrated(true);
+      return;
+    }
+
+    reset({
+      name: userData.name ?? "",
+      username: userData.username ?? "",
+      profileAvatar: userData.profileAvatar ?? undefined,
+    });
+
+    setHydrated(true);
+  }, [userData, reset]);
 
   const onSubmit = (values: updateUserSchemaType) => {
     startTransition(async () => {
@@ -57,7 +74,7 @@ export default function ProfileForm({ user }: Props) {
   };
 
   const deleteProfileImage = async () => {
-    const image = getValues("profileImage");
+    const image = getValues("profileAvatar");
     if (!image || !image?.key) return;
 
     if (deletingKeys.has(image.key)) return;
@@ -66,7 +83,7 @@ export default function ProfileForm({ user }: Props) {
 
     try {
       await deleteFileAction(image.key);
-      setValue("profileImage", undefined, { shouldDirty: true });
+      setValue("profileAvatar", undefined, { shouldDirty: true });
       toast.success("Profile image removed");
     } catch {
       toast.error("Failed to remove image");
@@ -80,9 +97,9 @@ export default function ProfileForm({ user }: Props) {
   };
 
   const avatar =
-    form.watch("profileImage")?.url ??
-    user.profileImage?.url ??
-    user.image ??
+    form.watch("profileAvatar")?.url ??
+    userData.profileAvatar?.url ??
+    userData.image ??
     null;
 
   return (
@@ -109,7 +126,7 @@ export default function ProfileForm({ user }: Props) {
                   ) : (
                     <div className="w-full h-full rounded-full border flex items-center justify-center text-sm text-muted-foreground">
                       <div className="uppercase text-xl font-semibold">
-                        {user.name?.[0] ?? user.email[0]}
+                        {userData.name?.[0] ?? userData.email[0]}
                       </div>
                     </div>
                   )}
@@ -125,7 +142,7 @@ export default function ProfileForm({ user }: Props) {
                         return;
                       }
                       setValue(
-                        "profileImage",
+                        "profileAvatar",
                         { url: file.url, key: file.key },
                         {
                           shouldDirty: true,
@@ -157,7 +174,7 @@ export default function ProfileForm({ user }: Props) {
                       type="button"
                       variant="ghost"
                       disabled={deletingKeys.has(
-                        form.watch("profileImage")?.key ?? ""
+                        form.watch("profileAvatar")?.key ?? ""
                       )}
                       onClick={deleteProfileImage}
                       className="text-red-600 text-sm"
@@ -198,7 +215,7 @@ export default function ProfileForm({ user }: Props) {
             />
 
             <div className="text-sm text-muted-foreground">
-              Email: <span className="font-medium">{user.email}</span>
+              Email: <span className="font-medium">{userData.email}</span>
             </div>
 
             <Button type="submit" disabled={isPending}>

@@ -134,7 +134,7 @@ export default function ProfileForm({ userData }: Props) {
 
                 <span>
                   <UploadButton
-                    endpoint="profileImage"
+                    endpoint="profileAvatar"
                     onClientUploadComplete={async (res) => {
                       const file = res[0];
                       if (!file) {

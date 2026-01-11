@@ -151,9 +151,9 @@ export default function ProfileForm({ userData }: Props) {
                         }
                       );
 
-                      //   await updateUserProfile({
-                      //     profileImage: { url: file.url, key: file.key },
-                      //   });
+                      await updateUserProfile({
+                        profileAvatar: { url: file.url, key: file.key },
+                      });
                       toast.success("Profile image updated");
                     }}
                     className="

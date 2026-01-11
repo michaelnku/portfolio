@@ -16,23 +16,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserDTO } from "@/lib/types";
+import { ProfileUI } from "@/lib/types";
 import { updateUserProfile } from "@/actions/user";
 import { updateUserSchema, updateUserSchemaType } from "@/lib/zodValidation";
 import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
 import { deleteFileAction } from "@/actions/aboutActions";
-import { Camera, Loader2, Trash } from "lucide-react";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 type Props = {
-  user: UserDTO;
+  user: ProfileUI;
 };
 
 export default function ProfileForm({ user }: Props) {

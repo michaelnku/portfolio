@@ -5,12 +5,22 @@ export type ProfileImage = {
   key: string;
 };
 
-export type UserDTO = {
+export type ProfileUI = {
   id: string;
   email: string;
   role: UserRole;
 
   profileImage?: ProfileImage | null;
+
+  name?: string | null;
+  username?: string | null;
+  image?: string | null;
+};
+
+export type UserDTO = {
+  id: string;
+  email: string;
+  role: UserRole;
 
   name?: string | null;
   username?: string | null;

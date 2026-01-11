@@ -1,6 +1,6 @@
 import { CurrentUser } from "@/lib/currentUser";
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { getAdminAbout } from "@/components/helper/getAdminAbout";
 import { getAdminContact } from "@/components/helper/getAdminContact";
 import { Button } from "@/components/ui/button";

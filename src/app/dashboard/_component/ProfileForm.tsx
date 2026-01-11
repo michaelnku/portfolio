@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ProfileUI } from "@/lib/types";
+import { UserDTO } from "@/lib/types";
 import { updateUserProfile } from "@/actions/user";
 import { updateUserSchema, updateUserSchemaType } from "@/lib/zodValidation";
 import { UploadButton } from "@/utils/uploadthing";
@@ -24,7 +24,7 @@ import Image from "next/image";
 import { deleteFileAction } from "@/actions/aboutActions";
 
 type Props = {
-  user: ProfileUI;
+  user: UserDTO;
 };
 
 export default function ProfileForm({ user }: Props) {
@@ -58,7 +58,7 @@ export default function ProfileForm({ user }: Props) {
 
   const deleteProfileImage = async () => {
     const image = getValues("profileImage");
-    if (!image?.key) return;
+    if (!image || !image?.key) return;
 
     if (deletingKeys.has(image.key)) return;
 
@@ -84,8 +84,6 @@ export default function ProfileForm({ user }: Props) {
     user.profileImage?.url ??
     user.image ??
     null;
-
-  console.log("AVATAR URL:", avatar);
 
   return (
     <Card>
@@ -136,9 +134,9 @@ export default function ProfileForm({ user }: Props) {
                         }
                       );
 
-                      await updateUserProfile({
-                        profileImage: { url: file.url, key: file.key },
-                      });
+                      //   await updateUserProfile({
+                      //     profileImage: { url: file.url, key: file.key },
+                      //   });
                       toast.success("Profile image updated");
                     }}
                     className="

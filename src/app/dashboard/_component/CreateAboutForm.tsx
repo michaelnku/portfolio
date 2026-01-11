@@ -387,7 +387,19 @@ export default function CreateAboutForm({ initialData }: Props) {
   "
               onClientUploadComplete={(res) => {
                 const file = res[0];
-                setValue("profileImage", { url: file.url, key: file.key });
+                if (!file) {
+                  toast.error("Upload failed");
+                  return;
+                }
+                setValue(
+                  "profileImage",
+                  { url: file.url, key: file.key },
+                  {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                    shouldValidate: true,
+                  }
+                );
                 toast.success("Profile image uploaded");
               }}
             />

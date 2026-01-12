@@ -77,7 +77,7 @@ export default function AdminNavbar({ initialUser, about }: Props) {
           </Sheet>
 
           {/* BRAND */}
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/dashboard" className="flex items-center gap-3">
             <Image
               src="https://j1ruac0eqa.ufs.sh/f/3IGtMbPoM9Du0BUsAYCqwSbDInhZT2MBG1Xz9W6v0y4Ogfrc"
               alt="Michael Nku"

@@ -19,6 +19,8 @@ import { AuthError } from "next-auth";
 import { ADMIN_LOGIN_REDIRECT } from "@/routes";
 import { CurrentUser } from "@/lib/currentUser";
 import { revalidatePath } from "next/cache";
+import { ProfileImage } from "@/lib/types";
+import { Prisma } from "@/generated/prisma/client";
 
 // create user action
 export const createUser = async (values: UserSchemaType) => {
@@ -103,7 +105,7 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     return { error: "Invalid profile data" };
   }
 
-  const { name, username, profileAvatar } = parsed.data;
+  const { name, username } = parsed.data;
 
   const user = await CurrentUser();
   if (!user) return { error: "Unauthorized" };
@@ -124,12 +126,27 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     data: {
       name,
       username,
-      profileAvatar,
     },
   });
 
   revalidatePath("/dashboard/profile");
 
+  return { success: true };
+}
+
+// ONLY for avatar
+export async function updateProfileAvatar(image?: ProfileImage | null) {
+  const user = await CurrentUser();
+  if (!user) return { error: "Unauthorized" };
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      profileAvatar: image === null ? Prisma.JsonNull : image ?? undefined,
+    },
+  });
+
+  revalidatePath("/dashboard/profile");
   return { success: true };
 }
 

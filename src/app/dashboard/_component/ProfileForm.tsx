@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserDTO } from "@/lib/types";
-import { updateUserProfile } from "@/actions/user";
+import { updateProfileAvatar, updateUserProfile } from "@/actions/user";
 import { updateUserSchema, updateUserSchemaType } from "@/lib/zodValidation";
 import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
@@ -150,10 +150,11 @@ export default function ProfileForm({ userData }: Props) {
                           shouldValidate: true,
                         }
                       );
-
-                      await updateUserProfile({
-                        profileAvatar: { url: file.url, key: file.key },
+                      await updateProfileAvatar({
+                        url: file.url,
+                        key: file.key,
                       });
+
                       toast.success("Profile image updated");
                     }}
                     className="

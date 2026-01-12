@@ -101,7 +101,7 @@ export default function ProfileForm({ userData }: Props) {
     userData.image;
 
   const watchedProfileAvatar = form.watch("profileAvatar");
-
+  console.log("avatar url in profile form is :", avatar);
   return (
     <Card>
       <CardHeader>

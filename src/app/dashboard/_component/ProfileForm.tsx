@@ -140,7 +140,14 @@ export default function ProfileForm({ user }: Props) {
                           shouldValidate: true,
                         }
                       );
-                      await deleteProfileAvatarAction();
+
+                      await updateUserProfile({
+                        profileAvatar: {
+                          url: file.url,
+                          key: file.key,
+                        },
+                      });
+
                       toast.success("Profile image updated");
                     }}
                     className="

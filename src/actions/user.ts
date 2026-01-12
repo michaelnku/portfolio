@@ -38,12 +38,23 @@ export const deleteProfileAvatarAction = async () => {
     if (!dbUser?.profileAvatar) return { error: "No profile avatar to delete" };
 
     const avatar = dbUser.profileAvatar as {
-      key: string;
+      key?: string;
     };
+
+    if (!avatar.key) {
+      // 🔥 delete record from DB
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          profileAvatar: Prisma.JsonNull,
+        },
+      });
+
+      return { success: true };
+    }
 
     await utapi.deleteFiles([avatar.key]);
 
-    // 🔥 delete record from DB
     await prisma.user.update({
       where: { id: user.id },
       data: {
@@ -164,7 +175,12 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     data: {
       name,
       username,
-      profileAvatar: { ...(profileAvatar ? profileAvatar : Prisma.JsonNull) },
+      profileAvatar:
+        profileAvatar === undefined
+          ? undefined
+          : profileAvatar === null
+          ? Prisma.JsonNull
+          : profileAvatar,
     },
   });
 

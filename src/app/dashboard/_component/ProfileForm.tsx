@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -22,43 +22,29 @@ import { updateUserSchema, updateUserSchemaType } from "@/lib/zodValidation";
 import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
 import { deleteFileAction } from "@/actions/aboutActions";
+import { useRouter } from "next/navigation";
 
 type Props = {
-  userData: UserDTO;
+  user: UserDTO;
 };
 
-export default function ProfileForm({ userData }: Props) {
+export default function ProfileForm({ user }: Props) {
   const [isPending, startTransition] = useTransition();
 
   const [deletingKeys, setDeletingKeys] = useState<Set<string>>(new Set());
 
-  const [hydrated, setHydrated] = useState(false);
+  const router = useRouter();
 
   const form = useForm<updateUserSchemaType>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
-      name: userData.name ?? "",
-      username: userData.username ?? "",
-      profileAvatar: userData.profileAvatar ?? undefined,
+      name: user.name ?? "",
+      username: user.username ?? "",
+      profileAvatar: user.profileAvatar ?? undefined,
     },
   });
 
   const { control, handleSubmit, setValue, getValues, reset } = form;
-
-  useEffect(() => {
-    if (!userData) {
-      setHydrated(true);
-      return;
-    }
-
-    reset({
-      name: userData.name ?? "",
-      username: userData.username ?? "",
-      profileAvatar: userData.profileAvatar ?? undefined,
-    });
-
-    setHydrated(true);
-  }, [userData, reset]);
 
   const onSubmit = (values: updateUserSchemaType) => {
     startTransition(async () => {
@@ -96,9 +82,7 @@ export default function ProfileForm({ userData }: Props) {
   };
 
   const avatar =
-    form.watch("profileAvatar")?.url ??
-    userData.profileAvatar?.url ??
-    userData.image;
+    form.watch("profileAvatar")?.url ?? user.profileAvatar?.url ?? user.image;
 
   const watchedProfileAvatar = form.watch("profileAvatar");
   console.log("avatar url in profile form is :", avatar);
@@ -126,7 +110,7 @@ export default function ProfileForm({ userData }: Props) {
                   ) : (
                     <div className="w-full h-full rounded-full border flex items-center justify-center text-sm text-muted-foreground">
                       <div className="uppercase text-xl font-semibold">
-                        {userData.name?.[0] ?? userData.email[0]}
+                        {user.name?.[0] ?? user.email[0]}
                       </div>
                     </div>
                   )}
@@ -154,7 +138,7 @@ export default function ProfileForm({ userData }: Props) {
                         url: file.url,
                         key: file.key,
                       });
-
+                      router.refresh();
                       toast.success("Profile image updated");
                     }}
                     className="
@@ -216,7 +200,7 @@ export default function ProfileForm({ userData }: Props) {
             />
 
             <div className="text-sm text-muted-foreground">
-              Email: <span className="font-medium">{userData.email}</span>
+              Email: <span className="font-medium">{user.email}</span>
             </div>
 
             <Button type="submit" disabled={isPending}>

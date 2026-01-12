@@ -22,9 +22,14 @@ import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useGetCurrentUserQuery } from "@/stores/useGetCurrentUserQuery";
+import { UserDTO } from "@/lib/types";
 
-export default function ProfileForm() {
-  const { data: user } = useGetCurrentUserQuery();
+type Props = {
+  userData: UserDTO;
+};
+
+export default function ProfileForm({ userData }: Props) {
+  const { data: user } = useGetCurrentUserQuery(userData);
   if (!user) return null;
   const [isPending, startTransition] = useTransition();
 
@@ -83,11 +88,11 @@ export default function ProfileForm() {
 
   const avatar =
     watch("profileAvatar")?.url ??
-    (user.profileAvatar?.url && user.profileAvatar.key) ??
+    user.profileAvatar?.url ??
     user.image ??
     null;
 
-  console.log("avatar url in profile form is :", avatar);
+  console.log("avatar url in profile form is :", user.profileAvatar?.url);
   return (
     <Card>
       <CardHeader>

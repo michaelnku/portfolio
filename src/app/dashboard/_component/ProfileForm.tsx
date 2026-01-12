@@ -16,19 +16,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserDTO } from "@/lib/types";
 import { deleteProfileAvatarAction, updateUserProfile } from "@/actions/user";
 import { updateUserSchema, updateUserSchemaType } from "@/lib/zodValidation";
 import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
-import { deleteFileAction } from "@/actions/aboutActions";
 import { useRouter } from "next/navigation";
+import { useGetCurrentUserQuery } from "@/stores/useGetCurrentUserQuery";
 
-type Props = {
-  user: UserDTO;
-};
-
-export default function ProfileForm({ user }: Props) {
+export default function ProfileForm() {
+  const { data: user } = useGetCurrentUserQuery();
+  if (!user) return null;
   const [isPending, startTransition] = useTransition();
 
   const [deletingKeys, setDeletingKeys] = useState<Set<string>>(new Set());
@@ -68,10 +65,9 @@ export default function ProfileForm({ user }: Props) {
     setDeletingKeys((p) => new Set(p).add(image.key));
 
     try {
-      await deleteFileAction(image.key);
+      await deleteProfileAvatarAction();
       setValue("profileAvatar", null, {
         shouldDirty: true,
-        shouldValidate: true,
       });
       toast.success("Profile image removed");
     } catch {
@@ -136,8 +132,6 @@ export default function ProfileForm({ user }: Props) {
                         { url: file.url, key: file.key },
                         {
                           shouldDirty: true,
-                          shouldTouch: true,
-                          shouldValidate: true,
                         }
                       );
 

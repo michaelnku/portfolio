@@ -1,11 +1,7 @@
 import PasswordForm from "@/app/dashboard/_component/PasswordForm";
 import ProfileForm from "@/app/dashboard/_component/ProfileForm";
-import { CurrentUser } from "@/lib/currentUser";
 
-const page = async () => {
-  const user = await CurrentUser();
-  if (!user) return null;
-
+const page = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-10">
       <header className="space-y-2">
@@ -14,7 +10,7 @@ const page = async () => {
           Manage your personal account information and password.
         </p>
       </header>
-      <ProfileForm user={user} />
+      <ProfileForm />
       <PasswordForm />
     </div>
   );

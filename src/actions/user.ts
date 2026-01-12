@@ -19,8 +19,44 @@ import { AuthError } from "next-auth";
 import { ADMIN_LOGIN_REDIRECT } from "@/routes";
 import { CurrentUser } from "@/lib/currentUser";
 import { revalidatePath } from "next/cache";
-import { ProfileImage } from "@/lib/types";
+import { UTApi } from "uploadthing/server";
 import { Prisma } from "@/generated/prisma/client";
+
+const utapi = new UTApi();
+
+// delete image from DB + UploadThing
+export const deleteProfileAvatarAction = async () => {
+  const user = await CurrentUser();
+  if (!user) return { error: "Unauthorized" };
+
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { profileAvatar: true },
+    });
+
+    if (!dbUser?.profileAvatar) return { error: "No profile avatar to delete" };
+
+    const avatar = dbUser.profileAvatar as {
+      key: string;
+    };
+
+    await utapi.deleteFiles([avatar.key]);
+
+    // 🔥 delete record from DB
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        profileAvatar: Prisma.JsonNull,
+      },
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { error: "Could not delete profile image" };
+  }
+};
 
 // create user action
 export const createUser = async (values: UserSchemaType) => {
@@ -105,20 +141,22 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     return { error: "Invalid profile data" };
   }
 
-  const { name, username } = parsed.data;
+  const { name, username, profileAvatar } = parsed.data;
 
   const user = await CurrentUser();
   if (!user) return { error: "Unauthorized" };
 
-  const existing = await prisma.user.findFirst({
-    where: {
-      username,
-      NOT: { id: user.id },
-    },
-  });
+  if (username) {
+    const existing = await prisma.user.findFirst({
+      where: {
+        username,
+        NOT: { id: user.id },
+      },
+    });
 
-  if (existing) {
-    return { error: "Username already taken" };
+    if (existing) {
+      return { error: "Username already taken" };
+    }
   }
 
   await prisma.user.update({
@@ -126,27 +164,12 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     data: {
       name,
       username,
+      profileAvatar: { ...(profileAvatar ? profileAvatar : Prisma.JsonNull) },
     },
   });
 
   revalidatePath("/dashboard/profile");
 
-  return { success: true };
-}
-
-// ONLY for avatar
-export async function updateProfileAvatar(image?: ProfileImage | null) {
-  const user = await CurrentUser();
-  if (!user) return { error: "Unauthorized" };
-
-  await prisma.user.update({
-    where: { id: user.id },
-    data: {
-      profileAvatar: image === null ? Prisma.JsonNull : image ?? undefined,
-    },
-  });
-
-  revalidatePath("/dashboard/profile");
   return { success: true };
 }
 

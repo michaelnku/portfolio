@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserDTO } from "@/lib/types";
-import { updateProfileAvatar, updateUserProfile } from "@/actions/user";
+import { deleteProfileAvatarAction, updateUserProfile } from "@/actions/user";
 import { updateUserSchema, updateUserSchemaType } from "@/lib/zodValidation";
 import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
@@ -44,7 +44,7 @@ export default function ProfileForm({ user }: Props) {
     },
   });
 
-  const { control, handleSubmit, setValue, getValues, reset } = form;
+  const { control, watch, handleSubmit, setValue, getValues, reset } = form;
 
   const onSubmit = (values: updateUserSchemaType) => {
     startTransition(async () => {
@@ -54,6 +54,7 @@ export default function ProfileForm({ user }: Props) {
           return;
         }
         toast.success("Profile updated");
+        router.refresh();
       });
     });
   };
@@ -68,7 +69,10 @@ export default function ProfileForm({ user }: Props) {
 
     try {
       await deleteFileAction(image.key);
-      setValue("profileAvatar", undefined, { shouldDirty: true });
+      setValue("profileAvatar", null, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
       toast.success("Profile image removed");
     } catch {
       toast.error("Failed to remove image");
@@ -82,9 +86,11 @@ export default function ProfileForm({ user }: Props) {
   };
 
   const avatar =
-    form.watch("profileAvatar")?.url ?? user.profileAvatar?.url ?? user.image;
+    watch("profileAvatar")?.url ??
+    (user.profileAvatar?.url && user.profileAvatar.key) ??
+    user.image ??
+    null;
 
-  const watchedProfileAvatar = form.watch("profileAvatar");
   console.log("avatar url in profile form is :", avatar);
   return (
     <Card>
@@ -134,11 +140,7 @@ export default function ProfileForm({ user }: Props) {
                           shouldValidate: true,
                         }
                       );
-                      await updateProfileAvatar({
-                        url: file.url,
-                        key: file.key,
-                      });
-                      router.refresh();
+                      await deleteProfileAvatarAction();
                       toast.success("Profile image updated");
                     }}
                     className="

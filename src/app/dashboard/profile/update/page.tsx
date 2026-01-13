@@ -1,10 +1,10 @@
-import PasswordForm from "@/app/dashboard/_component/PasswordForm";
 import ProfileForm from "@/app/dashboard/_component/ProfileForm";
-import { CurrentUser } from "@/lib/currentUser";
+import PasswordForm from "@/app/dashboard/_component/PasswordForm";
+import { getUserProfile } from "@/components/helper/getUserProfile";
 
-const page = async () => {
-  const user = await CurrentUser();
-  if (!user) return null;
+export default async function Page() {
+  const userProfile = await getUserProfile();
+  if (!userProfile) return null;
 
   return (
     <div className="max-w-4xl mx-auto space-y-10">
@@ -14,10 +14,9 @@ const page = async () => {
           Manage your personal account information and password.
         </p>
       </header>
-      <ProfileForm userData={user} />
+
+      <ProfileForm userData={userProfile} />
       <PasswordForm />
     </div>
   );
-};
-
-export default page;
+}

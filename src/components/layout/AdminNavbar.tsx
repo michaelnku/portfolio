@@ -103,7 +103,7 @@ export default function AdminNavbar({ initialUser, about }: Props) {
               {avatar ? (
                 <Image
                   src={avatar}
-                  alt="User avatar"
+                  alt="avatar"
                   width={32}
                   height={32}
                   className="rounded-full object-cover"

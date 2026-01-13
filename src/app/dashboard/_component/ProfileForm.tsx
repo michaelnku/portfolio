@@ -23,6 +23,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useGetCurrentUserQuery } from "@/stores/useGetCurrentUserQuery";
 import { UserDTO } from "@/lib/types";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   userData: UserDTO;
@@ -36,6 +37,7 @@ export default function ProfileForm({ userData }: Props) {
   const [deletingKeys, setDeletingKeys] = useState<Set<string>>(new Set());
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const form = useForm<updateUserSchemaType>({
     resolver: zodResolver(updateUserSchema),
@@ -46,7 +48,7 @@ export default function ProfileForm({ userData }: Props) {
     },
   });
 
-  const { control, watch, handleSubmit, setValue, getValues, reset } = form;
+  const { control, handleSubmit, setValue, getValues } = form;
 
   const onSubmit = (values: updateUserSchemaType) => {
     startTransition(async () => {
@@ -87,12 +89,13 @@ export default function ProfileForm({ userData }: Props) {
   };
 
   const avatar =
-    watch("profileAvatar")?.url ??
-    user.profileAvatar?.url ??
-    user.image ??
+    form.watch("profileAvatar")?.url ??
+    user?.profileAvatar?.url ??
+    user?.image ??
     null;
 
   console.log("avatar url in profile form is :", user.profileAvatar?.url);
+
   return (
     <Card>
       <CardHeader>
@@ -147,6 +150,9 @@ export default function ProfileForm({ userData }: Props) {
                         },
                       });
 
+                      queryClient.invalidateQueries({
+                        queryKey: ["currentUser"],
+                      });
                       toast.success("Profile image updated");
                     }}
                     className="

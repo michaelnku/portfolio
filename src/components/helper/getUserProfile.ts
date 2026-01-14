@@ -28,7 +28,13 @@ export async function getUserProfile() {
     name: dbUser.name,
     username: dbUser.username,
     role: dbUser.role,
-    profileAvatar: dbUser.profileAvatar as ProfileImage | undefined,
     image: dbUser.image,
+    profileAvatar:
+      dbUser.profileAvatar &&
+      typeof dbUser.profileAvatar === "object" &&
+      "url" in dbUser.profileAvatar &&
+      "key" in dbUser.profileAvatar
+        ? (dbUser.profileAvatar as ProfileImage)
+        : null,
   };
 }

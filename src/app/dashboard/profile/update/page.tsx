@@ -1,10 +1,11 @@
 import ProfileForm from "@/app/dashboard/_component/ProfileForm";
 import PasswordForm from "@/app/dashboard/_component/PasswordForm";
 import { getUserProfile } from "@/components/helper/getUserProfile";
+import { use } from "react";
 
-export default async function Page() {
-  const userProfile = await getUserProfile();
-  if (!userProfile) return null;
+export default function Page() {
+  const user = use(getUserProfile());
+  if (!user) return null;
 
   return (
     <div className="max-w-4xl mx-auto space-y-10">
@@ -15,7 +16,7 @@ export default async function Page() {
         </p>
       </header>
 
-      <ProfileForm userData={userProfile} />
+      <ProfileForm userData={user} />
       <PasswordForm />
     </div>
   );

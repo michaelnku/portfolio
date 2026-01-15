@@ -77,6 +77,7 @@ export default function ProfileForm({ userData }: Props) {
         shouldDirty: true,
       });
       toast.success("Profile image removed");
+      window.location.reload();
     } catch {
       toast.error("Failed to remove image");
     } finally {

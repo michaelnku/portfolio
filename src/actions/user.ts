@@ -175,7 +175,12 @@ export async function updateUserProfile(values: updateUserSchemaType) {
     data: {
       name,
       username,
-      profileAvatar,
+      profileAvatar:
+        profileAvatar === undefined
+          ? undefined
+          : profileAvatar === null
+          ? Prisma.JsonNull
+          : profileAvatar,
     },
   });
 

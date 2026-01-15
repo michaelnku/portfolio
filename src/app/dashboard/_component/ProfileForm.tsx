@@ -94,8 +94,6 @@ export default function ProfileForm({ userData }: Props) {
     user?.image ??
     null;
 
-  console.log("avatar url in profile form is :", user.profileAvatar?.url);
-
   return (
     <Card>
       <CardHeader>

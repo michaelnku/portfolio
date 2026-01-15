@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { SessionUser, UserDTO } from "@/lib/types";
+import { ProfileImage, SessionUser, UserDTO } from "@/lib/types";
 
 export async function normalizeUser(
   sessionUser: SessionUser | undefined | null
@@ -18,6 +18,7 @@ export async function normalizeUser(
     role: db.role,
     name: db.name ?? "",
     username: db.username ?? "",
+    profileAvatar: db.profileAvatar as ProfileImage | undefined,
     image: db.image ?? null,
   };
 }

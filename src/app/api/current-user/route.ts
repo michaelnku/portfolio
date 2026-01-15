@@ -1,4 +1,5 @@
 import { auth } from "@/auth/auth";
+import { normalizeUser } from "@/lib/normalizeUser";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -18,5 +19,5 @@ export async function GET() {
     },
   });
 
-  return Response.json(user);
+  return Response.json(normalizeUser(user));
 }

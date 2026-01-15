@@ -54,7 +54,7 @@ export const updateUserSchema = z.object({
     .min(2, { message: "name must be at least 2 characters." })
     .optional(),
 
-  profileAvatar: fileSchema.optional(),
+  profileAvatar: fileSchema.nullable().optional(),
 
   username: z
     .string({ message: "Username must be a string." })

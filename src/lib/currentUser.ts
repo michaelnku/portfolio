@@ -1,10 +1,16 @@
 import { auth } from "@/auth/auth";
 import { normalizeUser } from "@/lib/normalizeUser";
-import { SessionUser } from "./types";
+import { prisma } from "./prisma";
 
 export const CurrentUser = async () => {
   const session = await auth();
-  return normalizeUser(session?.user as SessionUser);
+
+  if (!session?.user?.id) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+  });
+  return normalizeUser(user);
 };
 
 export const CurrentUserId = async () => {

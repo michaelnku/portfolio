@@ -1,10 +1,9 @@
 import ProfileForm from "@/app/dashboard/_component/ProfileForm";
 import PasswordForm from "@/app/dashboard/_component/PasswordForm";
-import { getUserProfile } from "@/components/helper/getUserProfile";
-import { use } from "react";
+import { CurrentUser } from "@/lib/currentUser";
 
-export default function Page() {
-  const user = use(getUserProfile());
+export default async function Page() {
+  const user = await CurrentUser();
   if (!user) return null;
 
   return (

@@ -110,7 +110,7 @@ export default function AdminNavbar({ initialUser, about }: Props) {
                 />
               ) : (
                 <div className="w-8 h-8 uppercase rounded-full bg-muted flex items-center justify-center text-sm font-semibold">
-                  {user?.name?.[0] ?? user?.email[0]}
+                  {user?.name?.[0] ?? user?.email?.[0]}
                 </div>
               )}
 

@@ -93,11 +93,19 @@ export default async function ProfilePage() {
         <CardContent className="pt-6 space-y-4">
           <h3 className="font-medium">Actions</h3>
 
-          <Button asChild>
-            <Link href="/dashboard/profile/update">
-              Update Profile & Password
-            </Link>
-          </Button>
+          <div className="flex justify-between">
+            <Button asChild>
+              <Link href="/dashboard/profile/update">
+                Update Profile & Password
+              </Link>
+            </Button>
+            <Button
+              variant={"outline"}
+              className="text-red-300 hover:text-red-500"
+            >
+              Delete Account
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

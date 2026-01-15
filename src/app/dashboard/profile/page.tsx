@@ -15,6 +15,8 @@ export default async function ProfilePage() {
 
   const avatar = user?.profileAvatar?.url ?? user?.image ?? null;
 
+  console.log("avatar url in profile page is :", user?.profileAvatar?.url);
+
   return (
     <div className="max-w-5xl mx-auto space-y-10">
       <header className="space-y-2">

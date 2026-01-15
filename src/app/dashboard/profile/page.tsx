@@ -5,6 +5,7 @@ import { getAdminAbout } from "@/components/helper/getAdminAbout";
 import { getAdminContact } from "@/components/helper/getAdminContact";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import DeleteAcountModal from "../_component/DeleteAcountModal";
 
 export default async function ProfilePage() {
   const user = await CurrentUser();
@@ -99,12 +100,7 @@ export default async function ProfilePage() {
                 Update Profile & Password
               </Link>
             </Button>
-            <Button
-              variant={"outline"}
-              className="text-red-300 hover:text-red-500"
-            >
-              Delete Account
-            </Button>
+            <DeleteAcountModal userId={user.id} />
           </div>
         </CardContent>
       </Card>

@@ -23,7 +23,7 @@ export function DeleteProjectModal({ projectId }: { projectId: string }) {
   const [isPending, startTransition] = useTransition();
 
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deletingProject, setDeletingProject] = useState(false);
+
   const [confirmText, setConfirmText] = useState("");
 
   const handleDelete = () => {
@@ -68,7 +68,7 @@ export function DeleteProjectModal({ projectId }: { projectId: string }) {
         </div>
 
         {/* 🔥 Action feedback */}
-        {deletingProject && (
+        {isPending && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="w-4 h-4 animate-spin" />
             Deleting your project...
@@ -76,18 +76,16 @@ export function DeleteProjectModal({ projectId }: { projectId: string }) {
         )}
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={deletingProject}>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault();
               handleDelete();
             }}
-            disabled={deletingProject || confirmText !== "DELETE MY PROJECT"}
+            disabled={isPending || confirmText !== "DELETE MY PROJECT"}
             className="bg-red-600 hover:bg-red-700 text-white"
           >
-            {deletingProject ? "Deleting…" : "Yes, delete"}
+            {isPending ? "Deleting…" : "Yes, delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

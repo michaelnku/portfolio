@@ -41,7 +41,7 @@ export type UserSchemaType = z.infer<typeof userSchema>;
 export const loggedInUserSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
   password: z.string().min(6, {
-    message: "Password must be at least 4 characters.",
+    message: "Password must be at least 6 characters.",
   }),
 });
 

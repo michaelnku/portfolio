@@ -133,7 +133,7 @@ export default function CreateAboutForm({ initialData }: Props) {
   };
 
   const deleteSingleFile = async (
-    field: "profileImage" | "heroImage" | "resume"
+    field: "profileImage" | "heroImage" | "resume",
   ) => {
     const file = getValues(field);
     if (!file || !file?.key) return;
@@ -398,7 +398,7 @@ export default function CreateAboutForm({ initialData }: Props) {
                     shouldDirty: true,
                     shouldTouch: true,
                     shouldValidate: true,
-                  }
+                  },
                 );
                 toast.success("Profile image uploaded");
               }}
@@ -532,8 +532,8 @@ export default function CreateAboutForm({ initialData }: Props) {
             {isPending
               ? "Saving..."
               : isEditMode
-              ? "Update About"
-              : "Create About"}
+                ? "Update About"
+                : "Create About"}
           </Button>
         </form>
       </Form>
